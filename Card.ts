@@ -1,4 +1,5 @@
 import type { Suit, Rank, Order } from "./constants.ts";
+import { SuitEmojis } from "./constants.ts";
 
 export class Card {
   order: Order;
@@ -6,6 +7,10 @@ export class Card {
 
   constructor(order: Order) {
     this.order = order;
+  }
+
+  flip(): void {
+    this.faceup = !this.faceup;
   }
 
   toString(): string {
@@ -24,7 +29,7 @@ export class SuitCard extends Card {
   }
 
   toString(): string {
-    return this.faceup ? `<${this.suit[0]}${this.rank}>` : "🂠";
+    return this.faceup ? `${this.rank}${SuitEmojis[this.suit]} ` : "🂠";
   }
 }
 

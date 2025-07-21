@@ -52,3 +52,10 @@ export type OnlyOrders = { [key: string]: Order };
 export const Orders: OnlyOrders = {
   DEFAULT: { RankOrder: RankOrders.ACE_HIGH, SuitOrder: SuitOrders.DEFAULT },
 };
+
+export const SuitEmojis: Record<Suit, string> = {
+  Spade: "♠️",
+  Heart: "♥️",
+  Diamond: "♦️",
+  Club: "♣️",
+};

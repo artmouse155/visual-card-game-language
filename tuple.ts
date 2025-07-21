@@ -23,4 +23,9 @@ export class Tuple extends Array<Card> {
       this.length
     })`;
   }
+
+  flip(): void {
+    this.reverse();
+    this.map((x) => x.flip());
+  }
 }
