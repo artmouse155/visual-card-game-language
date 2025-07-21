@@ -1,6 +1,7 @@
 import type { Suit, Rank, Order } from "./constants.ts";
 import { Orders } from "./constants.ts";
 import { Card, SuitCard, Joker } from "./card.ts";
+import { Tuple } from "./tuple.ts";
 
 export class Deck {
   static STANDARD = new Deck(Orders.ACE_HIGH);
@@ -12,10 +13,14 @@ export class Deck {
     this.jokerCount = jokerCount;
   }
 
-  getCards(): Array<Card> {
-    let output: Array<Card> = [];
-    for (const suit in this.order.SuitOrder) {
-      output.push(new SuitCard(suit, 1, this.order));
+  getCards(): Tuple {
+    let output: Tuple = new Tuple();
+    for (const suitStr in this.order.SuitOrder) {
+      const suit: Suit = suitStr as Suit;
+      for (const rankStr in this.order.RankOrder) {
+        const rank: Rank = rankStr as Rank;
+        output.push(new SuitCard(suit, rank, this.order));
+      }
     }
     return output;
   }

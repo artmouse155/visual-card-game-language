@@ -8,7 +8,8 @@ export class Game {
 
   play() {
     let deck = new Deck(Orders.DEFAULT, 0);
-    let cards = deck.getCards();
-    console.log("Play");
+    let pile = deck.getCards();
+    pile.shuffle();
+    console.log(pile.toString());
   }
 }

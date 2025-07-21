@@ -22,10 +22,14 @@ export class SuitCard extends Card {
     this.suit = suit;
     this.rank = rank;
   }
+
+  toString(): string {
+    return this.faceup ? `<${this.suit[0]}${this.rank}>` : "🂠";
+  }
 }
 
 export class Joker extends Card {
   toString(): string {
-    return "🃏";
+    return this.faceup ? "🂿" : "🂠";
   }
 }

@@ -50,5 +50,5 @@ export const SuitOrders: OnlySuitOrders = {
 export type Order = { RankOrder: RankOrder; SuitOrder: SuitOrder };
 export type OnlyOrders = { [key: string]: Order };
 export const Orders: OnlyOrders = {
-  DEFAULT: { RankOrder: RankOrders.DEFAULT, SuitOrder: SuitOrders.DEFAULT },
+  DEFAULT: { RankOrder: RankOrders.ACE_HIGH, SuitOrder: SuitOrders.DEFAULT },
 };
