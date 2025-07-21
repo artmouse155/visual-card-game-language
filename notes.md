@@ -7,6 +7,6 @@
 #### Properties
 
 `suit (Suit)`
-`rank (number)`
+`rank (Rank)`
 
 #### Functions

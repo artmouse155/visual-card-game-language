@@ -1,2 +1,4 @@
-console.log("Wowza!");
-const card = new Card("Club", 1);
+import { Game } from "./game.ts";
+
+const game = new Game();
+game.play();
