@@ -1,5 +1,3 @@
-import { Game } from "./game.ts";
-
-const game = new Game();
+import { Blackjack } from "./blackjack.ts";
+const game = new Blackjack();
 game.play();
-export default Game;
