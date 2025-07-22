@@ -1,5 +1,7 @@
 import { Tuple } from "../logic/tuple.js"; // ts extension gone
-import { Label } from "label.js"; // ts extension gone
+import { CanvasItem } from "./nodes/canvas_item.js";
+import { VCGLNode } from "./nodes/vgcl_node.js";
+import { Vector2 } from "./utlis.js";
 
 const BG_IMAGE = "visuals/images/bg.png";
 
@@ -8,16 +10,45 @@ export class Renderer {
   ctx: CanvasRenderingContext2D;
   bgimage: HTMLImageElement = new Image();
 
-  tuples: Array<Tuple> = [];
-  labels: Array<Label> = [];
-
   bgRendered: boolean = false;
+
+  root = new CanvasItem(Vector2.ZERO, new Vector2(800, 600));
+  oldMousePos = Vector2.ZERO;
 
   constructor() {
     this.canvas = document.getElementById("VGCLCanvas") as HTMLCanvasElement;
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
-    this.loadbg();
+    const FPS = 60;
+
+    const processInterval = setInterval(() => {
+      this.root._process(1 / FPS);
+      this.render();
+    }, 1000 / FPS);
+
+    this.canvas.addEventListener("mousemove", (e) => {
+      const newMousePos = new Vector2(e.offsetX, e.offsetY);
+      this.root._on_mouse_move(
+        newMousePos,
+        newMousePos.minus(this.oldMousePos)
+      );
+      this.oldMousePos = newMousePos;
+    });
+
+    this.canvas.addEventListener("click", (e) => {
+      this.root._on_click(new Vector2(e.offsetX, e.offsetY));
+    });
+
+    this.canvas.addEventListener("mousedown", (e) => {
+      this.root._on_mouse_down(new Vector2(e.offsetX, e.offsetY));
+    });
+
+    this.canvas.addEventListener("mouseup", (e) => {
+      this.root._on_mouse_up(new Vector2(e.offsetX, e.offsetY));
+    });
+
+    // To stop it:
+    // clearInterval(processInterval);
   }
 
   loadbg() {
@@ -33,45 +64,23 @@ export class Renderer {
     }
   }
 
-  addTuple(tuple: Tuple) {
-    this.tuples.push(tuple);
-  }
-
-  addLabel(label: Label) {
-    this.labels.push(label);
+  addChild(node: VCGLNode) {
+    this.root.add_child(node);
   }
 
   render(): void {
     const ctx = this.ctx;
-    this.loadbg();
 
     ctx.clearRect(0, 0, 800, 600);
 
-    ctx.shadowColor = "black";
-    ctx.shadowBlur = 8;
-    ctx.shadowOffsetX = 2;
-    ctx.shadowOffsetY = 2;
+    // ctx.shadowColor = "black";
+    // ctx.shadowBlur = 8;
+    // ctx.shadowOffsetX = 2;
+    // ctx.shadowOffsetY = 2;
 
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 1;
     ctx.strokeStyle = "black";
 
-    for (const tuple of this.tuples) {
-      let offset_x = 0;
-      let offset_y = 0;
-      for (const card of tuple) {
-        const pos_x = tuple.x + offset_x;
-        const pos_y = tuple.y + offset_y;
-        ctx.fillStyle = card.faceup ? "#cececeff" : "red";
-        ctx.fillRect(pos_x, pos_y, 40, 60);
-        offset_x += 0.1;
-        offset_y += 0.1;
-      }
-    }
-
-    for (const label of this.labels) {
-      ctx.fillStyle = "black";
-      ctx.font = "30px Arial";
-      ctx.fillText(label.text, label.x, label.y);
-    }
+    this.root._draw(ctx);
   }
 }

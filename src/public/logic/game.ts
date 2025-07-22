@@ -1,6 +1,8 @@
 import { Tuple } from "./tuple.js"; // ts extension gone
-import { Label } from "../visuals/label.js"; // ts extension gone
+import { Label } from "../visuals/nodes/label.js"; // ts extension gone
 import { Renderer } from "../visuals/renderer.js";
+import { TupleNode } from "../visuals/nodes/tuple_node.js";
+import { Vector2 } from "../visuals/utlis.js";
 
 export class Game {
   renderer: Renderer = new Renderer();
@@ -19,12 +21,12 @@ export class Game {
     console.log("YOU WIN!");
   }
 
-  addTuple(tuple: Tuple) {
-    this.renderer.addTuple(tuple);
+  addTupleNode(x: number, y: number, tuple: Tuple): void {
+    this.renderer.addChild(new TupleNode(new Vector2(x, y), tuple));
   }
 
-  addLabel(label: Label) {
-    this.renderer.addLabel(label);
+  addLabel(x: number, y: number, text: string): void {
+    this.renderer.addChild(new Label(new Vector2(x, y), text));
   }
 
   bindButton(id: string, listener: (this: HTMLElement, ev: MouseEvent) => any) {

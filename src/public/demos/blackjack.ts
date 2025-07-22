@@ -4,7 +4,7 @@ import { Card, SuitCard, Joker } from "../logic/card.js"; // ts extension gone
 import { Deck } from "../logic/deck.js"; // ts extension gone
 import { Tuple, Stack } from "../logic/tuple.js"; // ts extension gone
 import { Game } from "../logic/game.js"; // ts extension gone
-import { Label } from "../visuals/label.js"; // ts extension gone
+import { Label } from "../visuals/nodes/label.js"; // ts extension gone
 
 export class Blackjack extends Game {
   /*
@@ -20,9 +20,9 @@ export class Blackjack extends Game {
     stack.reveal(hand, 5);
     console.log(stack.toString(), hand.toString());
 
-    this.addTuple(stack);
-    this.addTuple(hand);
-    this.addLabel({ x: 50, y: 50, text: "Howdy!" });
+    this.addTupleNode(0, 0, stack);
+    this.addTupleNode(0, 0, hand);
+    this.addLabel(50, 50, "Howdy!");
     this.bindButton("render", () => {
       this.renderer.render();
     });
