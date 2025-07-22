@@ -13,14 +13,17 @@ export class Deck {
     this.jokerCount = jokerCount;
   }
 
-  getCards(): Tuple {
-    let output: Tuple = new Tuple();
+  getCards(): Array<Card> {
+    let output: Array<Card> = [];
     for (const suitStr in this.order.SuitOrder) {
       const suit: Suit = suitStr as Suit;
       for (const rankStr in this.order.RankOrder) {
         const rank: Rank = rankStr as Rank;
         output.push(new SuitCard(suit, rank, this.order));
       }
+    }
+    for (let index = 0; index < this.jokerCount; index++) {
+      output.push(new Joker(this.order));
     }
     return output;
   }

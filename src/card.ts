@@ -13,6 +13,10 @@ export class Card {
     this.faceup = !this.faceup;
   }
 
+  setFaceup(faceup: boolean): void {
+    this.faceup = faceup;
+  }
+
   toString(): string {
     return this.faceup ? "🂡" : "🂠";
   }
