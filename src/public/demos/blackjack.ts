@@ -22,7 +22,7 @@ export class Blackjack extends Game {
 
     this.addTuple(stack);
     this.addTuple(hand);
-    this.addLabel({ x: 0, y: 0, text: "Howdy!" });
+    this.addLabel({ x: 50, y: 50, text: "Howdy!" });
     this.bindButton("render", () => {
       this.renderer.render();
     });
