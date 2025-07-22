@@ -19,11 +19,11 @@
   "license": "MIT",
   "author": "Chase Odom",
   "type": "module",
-  "main": "./src/index.ts",
+  "main": "./index.ts",
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --loader ts-node/esm src/index.ts"
+    "dev": "node --loader ts-node/esm index.ts"
   },
   "devDependencies": {
     "electron": "37.2.3"

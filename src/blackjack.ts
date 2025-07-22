@@ -1,9 +1,9 @@
-import type { Suit, Rank } from "./constants.ts";
-import { Orders } from "./constants.ts";
-import { Card, SuitCard, Joker } from "./card.ts";
-import { Deck } from "./deck.ts";
-import { Tuple, Stack } from "./tuple.ts";
-import { Game } from "./game.ts";
+import type { Suit, Rank } from "./logic/constants.ts";
+import { Orders } from "./logic/constants.ts";
+import { Card, SuitCard, Joker } from "./logic/card.ts";
+import { Deck } from "./logic/deck.ts";
+import { Tuple, Stack } from "./logic/tuple.ts";
+import { Game } from "./logic/game.ts";
 
 export class Blackjack extends Game {
   /*
