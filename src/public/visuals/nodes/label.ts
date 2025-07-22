@@ -29,7 +29,7 @@ export class Label extends CanvasItem {
     ctx.fillText(
       this.text,
       this.globalPosition.x,
-      this.globalPosition.y - this.size.y
+      this.globalPosition.y + this.size.y
     );
   }
 

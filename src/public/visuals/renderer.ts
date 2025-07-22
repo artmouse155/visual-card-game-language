@@ -47,6 +47,10 @@ export class Renderer {
       this.root._on_mouse_up(new Vector2(e.offsetX, e.offsetY));
     });
 
+    this.canvas.addEventListener("mouseleave", (e) => {
+      this.root._on_mouse_up(new Vector2(e.offsetX, e.offsetY));
+    });
+
     // To stop it:
     // clearInterval(processInterval);
   }
