@@ -1,0 +1,26 @@
+{
+  "name": "visual-card-game-language",
+  "version": "1.0.0",
+  "description": "A module for creating card games.",
+  "keywords": [
+    "card",
+    "game",
+    "language",
+    "code"
+  ],
+  "homepage": "https://github.com/artmouse155/visual-card-game-language#readme",
+  "bugs": {
+    "url": "https://github.com/artmouse155/visual-card-game-language/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/artmouse155/visual-card-game-language.git"
+  },
+  "license": "MIT",
+  "author": "Chase Odom",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
