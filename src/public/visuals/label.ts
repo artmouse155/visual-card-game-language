@@ -1,1 +1,5 @@
-export class Label {}
+export interface Label {
+  x: number;
+  y: number;
+  text: string;
+}
