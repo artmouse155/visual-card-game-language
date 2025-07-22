@@ -1,5 +1,5 @@
-import { Tuple } from "./tuple.ts";
-import { Label } from "../visuals/label.ts";
+import { Tuple } from "./tuple.js"; // ts extension gone
+import { Label } from "../visuals/label.js"; // ts extension gone
 
 export class Game {
   tuples: Array<Tuple> = [];

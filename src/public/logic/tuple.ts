@@ -1,5 +1,5 @@
-import type { Suit, Rank } from "./constants.ts";
-import { Card, SuitCard, Joker } from "./card.ts";
+import type { Suit, Rank } from "./constants.js"; // ts extension gone
+import { Card, SuitCard, Joker } from "./card.js"; // ts extension gone
 
 export class Tuple extends Array<Card> {
   constructor(cards: Array<Card> = []) {
@@ -64,8 +64,6 @@ export class Tuple extends Array<Card> {
 
 export class Stack extends Tuple {
   toString(): string {
-    return `${this.length > 0 ? this.at(this.length - 1) : "X"} (x${
-      this.length
-    })`;
+    return `${this.length > 0 ? this[this.length - 1] : "X"} (x${this.length})`;
   }
 }

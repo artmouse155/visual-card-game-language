@@ -18,17 +18,11 @@
   },
   "license": "MIT",
   "author": "Chase Odom",
-  "type": "module",
   "main": "./index.ts",
+  "type": "module",
   "scripts": {
-    "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --loader ts-node/esm index.ts"
-  },
-  "devDependencies": {
-    "electron": "37.2.3"
-  },
-  "dependencies": {
-    "ts-node": "^10.9.2"
+    "build": "tsc && npm run build:cp-public",
+    "build:cp-public": "cp -r ./public/** ./dist",
+    "type": "tsc --noEmit"
   }
 }
