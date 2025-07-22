@@ -20,9 +20,9 @@ export class Blackjack extends Game {
     stack.reveal(hand, 5);
     console.log(stack.toString(), hand.toString());
 
-    this.addTupleNode(0, 0, stack);
-    this.addTupleNode(0, 0, hand);
-    this.addLabel(50, 50, "Howdy!");
+    this.addTupleNode(200, 200, stack);
+    this.addTupleNode(50, 50, hand);
+    this.addLabel(300, 50, "Blackjack");
     this.bindButton("render", () => {
       this.renderer.render();
     });

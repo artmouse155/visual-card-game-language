@@ -4,20 +4,25 @@ import { CanvasItem } from "./canvas_item.js";
 export class Label extends CanvasItem {
   text: string = "";
 
-  mouseDown = false;
-  dragging = false;
+  scheduleResize = false;
 
   constructor(globalPosition: Vector2, text: string) {
     super(globalPosition, new Vector2(100, 100));
     this.text = text;
+    this.enable_dragging = false;
+    this.scheduleResize = true;
   }
 
-  // _process(delta: number): void {
-  //   this.globalPosition.x += 5 * delta;
-  //   this.globalPosition.y += 5 * delta;
-  // }
-
   _draw(ctx: CanvasRenderingContext2D): void {
+    // TODO: Move this somewhere else
+    const metrics = ctx.measureText(this.text);
+    if (this.scheduleResize) {
+      this.size.x = metrics.width;
+      this.size.y =
+        metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+      this.scheduleResize = false;
+    }
+
     ctx.fillStyle = "black";
     ctx.font = "30px Arial";
     ctx.strokeRect(
@@ -31,26 +36,6 @@ export class Label extends CanvasItem {
       this.globalPosition.x,
       this.globalPosition.y + this.size.y
     );
-  }
-
-  _on_mouse_move(mousePos: Vector2, mouseDelta: Vector2) {
-    super._on_mouse_move(mousePos, mouseDelta);
-    if (this.dragging) {
-      this.globalPosition = this.globalPosition.plus(mouseDelta);
-    }
-  }
-
-  _on_mouse_down(mousePos: Vector2): void {
-    super._on_mouse_down(mousePos);
-    this.mouseDown = true;
-    if (this.touchingMouse) {
-      this.dragging = true;
-    }
-  }
-
-  _on_mouse_up(mousePos: Vector2): void {
-    super._on_mouse_up(mousePos);
-    this.mouseDown = false;
-    this.dragging = false;
+    super._draw(ctx);
   }
 }

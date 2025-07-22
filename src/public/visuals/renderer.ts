@@ -14,6 +14,7 @@ export class Renderer {
 
   root = new CanvasItem(Vector2.ZERO, new Vector2(800, 600));
   oldMousePos = Vector2.ZERO;
+  mouseDown = false;
 
   constructor() {
     this.canvas = document.getElementById("VGCLCanvas") as HTMLCanvasElement;
@@ -30,7 +31,8 @@ export class Renderer {
       const newMousePos = new Vector2(e.offsetX, e.offsetY);
       this.root._on_mouse_move(
         newMousePos,
-        newMousePos.minus(this.oldMousePos)
+        newMousePos.minus(this.oldMousePos),
+        this.mouseDown
       );
       this.oldMousePos = newMousePos;
     });
@@ -40,10 +42,12 @@ export class Renderer {
     });
 
     this.canvas.addEventListener("mousedown", (e) => {
+      this.mouseDown = true;
       this.root._on_mouse_down(new Vector2(e.offsetX, e.offsetY));
     });
 
     this.canvas.addEventListener("mouseup", (e) => {
+      this.mouseDown = false;
       this.root._on_mouse_up(new Vector2(e.offsetX, e.offsetY));
     });
 
