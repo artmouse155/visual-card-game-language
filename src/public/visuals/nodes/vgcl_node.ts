@@ -1,6 +1,7 @@
 export class VCGLNode {
   children: Array<VCGLNode> = [];
   inTree: boolean = false;
+  readyCalled: boolean = false;
 
   propagate_to_children<Type extends VCGLNode, Return>(
     func: (t: Type) => Return,
@@ -24,7 +25,23 @@ export class VCGLNode {
     return success;
   }
 
+  _propagate_add_to_tree(): void {
+    this.inTree = true;
+    if (!this.readyCalled) {
+      this._ready();
+    }
+    this.propagate_to_children(
+      (t: VCGLNode) => {
+        return t._propagate_add_to_tree();
+      },
+      null,
+      false,
+      true
+    );
+  }
+
   _ready(): void {
+    this.readyCalled = true;
     this.inTree = true;
   }
 
@@ -47,8 +64,9 @@ export class VCGLNode {
 
   addChild<Type extends VCGLNode>(node: Type): Type {
     this.children.push(node);
-    // TODO: Fix this! Should only call _ready() if we are in the tree. _ready() should only be called once
-    node._ready();
+    if (this.inTree) {
+      node._propagate_add_to_tree();
+    }
     return node;
   }
 

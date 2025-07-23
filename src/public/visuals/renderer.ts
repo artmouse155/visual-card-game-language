@@ -57,6 +57,7 @@ export class Renderer {
 
     // To stop it:
     // clearInterval(processInterval);
+    this.root._ready();
   }
 
   loadbg() {

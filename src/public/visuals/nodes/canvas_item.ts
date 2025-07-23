@@ -27,6 +27,7 @@ export class CanvasItem extends VCGLNode {
   updateChildrenGlobalPosition() {
     for (const child of this.get_children()) {
       (child as CanvasItem)._parentGlobalPosition = this.globalPosition;
+      (child as CanvasItem).updateChildrenGlobalPosition();
     }
   }
 
@@ -81,16 +82,16 @@ export class CanvasItem extends VCGLNode {
     );
   }
 
-  // addChild<Type extends VCGLNode>(node: Type): Type {
-  //   super.addChild(node);
-  //   this.updateChildrenGlobalPosition();
-  //   return node;
-  // }
-  _ready(): void {
-    super._ready();
-    // TODO: To fix this, make this a propagated function / recursive.
+  addChild<Type extends VCGLNode>(node: Type): Type {
+    super.addChild(node);
     this.updateChildrenGlobalPosition();
+    return node;
   }
+  // _ready(): void {
+  //   super._ready();
+  //   // TODO: To fix this, make this a propagated function / recursive.
+  //   this.updateChildrenGlobalPosition();
+  // }
 
   // Pretends like we moved a bit when whe first start to make it so that our children
   _draw(ctx: CanvasRenderingContext2D): void {
