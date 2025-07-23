@@ -5,8 +5,10 @@ export class Label extends CanvasItem {
   _text: string = "";
 
   set text(value: string) {
+    if (this._text != value) {
+      this.scheduleResize = true;
+    }
     this._text = value;
-    this.scheduleResize = true;
   }
 
   get text() {
@@ -22,16 +24,18 @@ export class Label extends CanvasItem {
   }
 
   _draw(ctx: CanvasRenderingContext2D): void {
+    ctx.fillStyle = "black";
+    ctx.font = "30px Arial";
+
     if (this.scheduleResize) {
       const metrics = ctx.measureText(this.text);
+
       this.size.x = metrics.width;
       this.size.y =
         metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
       this.scheduleResize = false;
     }
 
-    ctx.fillStyle = "black";
-    ctx.font = "30px Arial";
     // ctx.strokeRect(
     //   this.globalPosition.x,
     //   this.globalPosition.y,
