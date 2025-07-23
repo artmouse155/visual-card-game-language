@@ -26,6 +26,7 @@ export class CanvasItem extends VCGLNode {
 
   touchingMouse = false;
   dragging = false;
+  dragged = false; // true if dragging moved this node
 
   constructor(globalPosition: Vector2, size: Vector2 = Vector2.ZERO) {
     super();
@@ -34,14 +35,38 @@ export class CanvasItem extends VCGLNode {
   }
 
   _draw(ctx: CanvasRenderingContext2D): void {
-    for (const child of this.get_children()) {
-      (child as CanvasItem)._draw(ctx);
-    }
+    this.propagate_to_children((t: CanvasItem) => {
+      return t._draw(ctx);
+    }, null);
   }
 
-  _on_mouse_move(mousePos: Vector2, mouseDelta: Vector2, mouseDown: boolean) {
+  propagate_to_children<Type extends VCGLNode, Return>(
+    func: (t: Type) => Return,
+    success: Return,
+    limitable: boolean = false
+  ): Return {
     for (const child of this.get_children()) {
-      (child as CanvasItem)._on_mouse_move(mousePos, mouseDelta, mouseDown);
+      const typeChild = child as Type;
+      const result = func(typeChild);
+      if (!result && limitable) {
+        return result;
+      }
+    }
+    return success;
+  }
+
+  _on_mouse_move(
+    mousePos: Vector2,
+    mouseDelta: Vector2,
+    mouseDown: boolean
+  ): boolean {
+    // Boolean return tells us if we can continue
+    for (const child of this.get_children()) {
+      if (
+        !(child as CanvasItem)._on_mouse_move(mousePos, mouseDelta, mouseDown)
+      ) {
+        return false;
+      }
     }
     this.touchingMouse = Vector2.posInRect(
       this.globalPosition,
@@ -49,33 +74,46 @@ export class CanvasItem extends VCGLNode {
       mousePos
     );
     if (this.dragging) {
+      this.dragged = true;
       this.globalPosition = this.globalPosition.plus(mouseDelta);
+      return false;
     }
+    return true;
   }
 
-  _on_click(mousePos: Vector2) {
-    for (const child of this.get_children()) {
-      (child as CanvasItem)._on_click(mousePos);
-    }
+  _on_click(mousePos: Vector2): boolean {
+    return this.propagate_to_children((t: CanvasItem) => {
+      return t._on_click(mousePos);
+    }, true);
   }
 
-  _on_mouse_down(mousePos: Vector2) {
-    for (const child of this.get_children()) {
-      (child as CanvasItem)._on_mouse_down(mousePos);
+  _on_mouse_down(mousePos: Vector2): boolean {
+    // Boolean return tells us if we can continue
+    if (
+      !this.propagate_to_children((t: CanvasItem) => {
+        return t._on_mouse_down(mousePos);
+      }, true)
+    ) {
+      return false;
     }
     if (this.enable_dragging && this.touchingMouse) {
       this.dragging = true;
+      return false;
     }
+    return true;
   }
 
-  _on_mouse_up(mousePos: Vector2) {
-    for (const child of this.get_children()) {
-      (child as CanvasItem)._on_mouse_up(mousePos);
+  _on_mouse_up(mousePos: Vector2): boolean {
+    // Boolean return tells us if we can continue
+    if (
+      !this.propagate_to_children((t: CanvasItem) => {
+        return t._on_mouse_up(mousePos);
+      }, true)
+    ) {
+      return false;
     }
+    this.dragged = false;
     this.dragging = false;
+    return true;
   }
-
-  //     setPos(newPos: Vector2) {
-  //         diff = newPos.minus(this.globalPosition);
-  //   }
 }

@@ -2,7 +2,16 @@ import { Vector2 } from "../utlis.js";
 import { CanvasItem } from "./canvas_item.js";
 
 export class Label extends CanvasItem {
-  text: string = "";
+  _text: string = "";
+
+  set text(value: string) {
+    this._text = value;
+    this.scheduleResize = true;
+  }
+
+  get text() {
+    return this._text;
+  }
 
   scheduleResize = false;
 
@@ -10,7 +19,6 @@ export class Label extends CanvasItem {
     super(globalPosition, new Vector2(100, 100));
     this.text = text;
     this.enable_dragging = false;
-    this.scheduleResize = true;
   }
 
   _draw(ctx: CanvasRenderingContext2D): void {
