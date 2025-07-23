@@ -7,11 +7,11 @@ import { Label } from "./label.js";
 export class CardNode extends CanvasItem {
   card: Card = new Card(Orders.DEFAULT);
 
-  constructor(globalPosition: Vector2, card: Card) {
-    super(globalPosition, new Vector2(80, 120));
+  constructor(position: Vector2, card: Card) {
+    super(position, new Vector2(80, 120));
     this.card = card;
     this.draggingEnabled = true;
-    this.addChild(new Label(globalPosition, card.toString()));
+    this.addChild(new Label(Vector2.ZERO, card.toString()));
   }
 
   getCard(): Card {

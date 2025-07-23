@@ -2,20 +2,32 @@ import { Vector2 } from "../utlis.js";
 import { VCGLNode } from "./vgcl_node.js";
 
 export class CanvasItem extends VCGLNode {
-  _globalPosition: Vector2 = Vector2.ZERO;
+  _parentGlobalPosition: Vector2 = Vector2.ZERO;
+  // _scheduleChildrenGlobalPositionUpdate = true;
+  _position: Vector2 = Vector2.ZERO;
 
   set globalPosition(value: Vector2) {
-    const diff = value.minus(this._globalPosition);
-    this._globalPosition = value;
-    for (const child of this.get_children()) {
-      (child as CanvasItem).globalPosition = (
-        child as CanvasItem
-      ).globalPosition.plus(diff);
-    }
+    const diff = value.minus(this.globalPosition);
+    this.position = this.position.plus(diff);
   }
 
   get globalPosition(): Vector2 {
-    return this._globalPosition;
+    return this._parentGlobalPosition.plus(this.position);
+  }
+
+  set position(value: Vector2) {
+    this._position = value;
+    this.updateChildrenGlobalPosition();
+  }
+
+  get position() {
+    return this._position;
+  }
+
+  updateChildrenGlobalPosition() {
+    for (const child of this.get_children()) {
+      (child as CanvasItem)._parentGlobalPosition = this.globalPosition;
+    }
   }
 
   size = Vector2.ZERO;
@@ -40,9 +52,9 @@ export class CanvasItem extends VCGLNode {
 
   visible = true;
 
-  constructor(globalPosition: Vector2, size: Vector2 = Vector2.ZERO) {
+  constructor(position: Vector2, size: Vector2 = Vector2.ZERO) {
     super();
-    this.globalPosition = globalPosition;
+    this.position = position;
     this.size = size;
   }
 
@@ -64,12 +76,29 @@ export class CanvasItem extends VCGLNode {
       false,
       false,
       (t: CanvasItem) => {
-        return t.visible;
+        return t.inTree && t.visible;
       }
     );
   }
 
-  _draw(ctx: CanvasRenderingContext2D): void {}
+  // addChild<Type extends VCGLNode>(node: Type): Type {
+  //   super.addChild(node);
+  //   this.updateChildrenGlobalPosition();
+  //   return node;
+  // }
+  _ready(): void {
+    super._ready();
+    // TODO: To fix this, make this a propagated function / recursive.
+    this.updateChildrenGlobalPosition();
+  }
+
+  // Pretends like we moved a bit when whe first start to make it so that our children
+  _draw(ctx: CanvasRenderingContext2D): void {
+    // if (this._scheduleChildrenGlobalPositionUpdate) {
+    //   this.updateChildrenGlobalPosition();
+    //   this._scheduleChildrenGlobalPositionUpdate = false;
+    // }
+  }
 
   _on_mouse_move(
     mousePos: Vector2,
@@ -95,7 +124,7 @@ export class CanvasItem extends VCGLNode {
     );
     if (this.canDrag && this.hasMouseFocus) {
       this.dragged = true;
-      this.globalPosition = this.globalPosition.plus(mouseDelta);
+      this.position = this.position.plus(mouseDelta);
       return false;
     }
     return true;

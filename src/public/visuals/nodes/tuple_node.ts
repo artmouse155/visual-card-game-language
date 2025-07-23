@@ -16,10 +16,10 @@ export class TupleNode extends CanvasItem {
     return out;
   }
 
-  constructor(globalPosition: Vector2, cards: Card[]) {
-    super(globalPosition, new Vector2(80, 120));
+  constructor(position: Vector2, cards: Card[]) {
+    super(position, new Vector2(80, 120));
     for (const card of cards) {
-      this.addChild(new CardNode(globalPosition, card));
+      this.addChild(new CardNode(Vector2.ZERO, card));
     }
     this.draggingEnabled = false;
   }

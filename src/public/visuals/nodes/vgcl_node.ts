@@ -47,6 +47,7 @@ export class VCGLNode {
 
   addChild<Type extends VCGLNode>(node: Type): Type {
     this.children.push(node);
+    // TODO: Fix this! Should only call _ready() if we are in the tree. _ready() should only be called once
     node._ready();
     return node;
   }

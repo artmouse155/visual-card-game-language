@@ -17,8 +17,8 @@ export class Label extends CanvasItem {
 
   scheduleResize = false;
 
-  constructor(globalPosition: Vector2, text: string) {
-    super(globalPosition, new Vector2(100, 100));
+  constructor(position: Vector2, text: string) {
+    super(position, new Vector2(100, 100));
     this.text = text;
     this.FocusEnabled = false;
   }

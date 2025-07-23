@@ -7,9 +7,9 @@ export class Button extends CanvasItem {
     console.log("No callable set.");
   };
 
-  constructor(globalPosition: Vector2, text: string) {
-    super(globalPosition, new Vector2(150, 60));
-    this.addChild(new Label(globalPosition, text));
+  constructor(position: Vector2, text: string) {
+    super(position, new Vector2(150, 60));
+    this.addChild(new Label(Vector2.ZERO, text));
   }
 
   _draw(ctx: CanvasRenderingContext2D) {
