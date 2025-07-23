@@ -35,17 +35,24 @@ export class CanvasItem extends VCGLNode {
   }
 
   _draw(ctx: CanvasRenderingContext2D): void {
-    this.propagate_to_children((t: CanvasItem) => {
-      return t._draw(ctx);
-    }, null);
+    this.propagate_to_children(
+      (t: CanvasItem) => {
+        return t._draw(ctx);
+      },
+      null,
+      false,
+      false
+    );
   }
 
   propagate_to_children<Type extends VCGLNode, Return>(
     func: (t: Type) => Return,
     success: Return,
-    limitable: boolean = false
+    limitable: boolean = false,
+    reverse: boolean = true
   ): Return {
-    for (const child of this.get_children()) {
+    const children = [...this.get_children()];
+    for (const child of reverse ? children.reverse() : children) {
       const typeChild = child as Type;
       const result = func(typeChild);
       if (!result && limitable) {
@@ -82,17 +89,25 @@ export class CanvasItem extends VCGLNode {
   }
 
   _on_click(mousePos: Vector2): boolean {
-    return this.propagate_to_children((t: CanvasItem) => {
-      return t._on_click(mousePos);
-    }, true);
+    return this.propagate_to_children(
+      (t: CanvasItem) => {
+        return t._on_click(mousePos);
+      },
+      true,
+      true
+    );
   }
 
   _on_mouse_down(mousePos: Vector2): boolean {
     // Boolean return tells us if we can continue
     if (
-      !this.propagate_to_children((t: CanvasItem) => {
-        return t._on_mouse_down(mousePos);
-      }, true)
+      !this.propagate_to_children(
+        (t: CanvasItem) => {
+          return t._on_mouse_down(mousePos);
+        },
+        true,
+        true
+      )
     ) {
       return false;
     }
@@ -106,9 +121,13 @@ export class CanvasItem extends VCGLNode {
   _on_mouse_up(mousePos: Vector2): boolean {
     // Boolean return tells us if we can continue
     if (
-      !this.propagate_to_children((t: CanvasItem) => {
-        return t._on_mouse_up(mousePos);
-      }, true)
+      !this.propagate_to_children(
+        (t: CanvasItem) => {
+          return t._on_mouse_up(mousePos);
+        },
+        true,
+        true
+      )
     ) {
       return false;
     }
