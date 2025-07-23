@@ -54,4 +54,61 @@ export class VCGLNode {
   get_children(): Array<VCGLNode> {
     return this.children;
   }
+
+  reparent(
+    child: VCGLNode,
+    newParent: VCGLNode,
+    destinationIndex?: number
+  ): void {
+    // Step 1: Find index of the child in the current parent
+    let index = 0;
+    let found = false;
+    const children = this.get_children();
+    for (index = 0; index < children.length; index++) {
+      const foundChild = children[index];
+      if (foundChild === child) {
+        found = true;
+        break;
+      }
+    }
+    if (found) {
+      this.children.splice(index, 1);
+      newParent.addChild(child);
+      if (destinationIndex) {
+        newParent.reorderChild(child, destinationIndex);
+      }
+    } else {
+      console.error(
+        "Tried to reparent child",
+        child,
+        ". Child not found in parent",
+        this
+      );
+    }
+  }
+
+  reorderChild(child: VCGLNode, destinationIndex: number): void {
+    // Step 1: Find index of the child in the current parent
+    let index = 0;
+    let found = false;
+    const children = this.get_children();
+    for (index = 0; index < children.length; index++) {
+      const foundChild = children[index];
+      if (foundChild === child) {
+        found = true;
+        break;
+      }
+    }
+    if (found) {
+      this.children.splice(index, 1);
+      this.children.splice(destinationIndex, 0, child);
+    } else {
+      console.error(
+        "Tried to reorder child",
+        child,
+        ". Child not found in parent",
+        this
+      );
+    }
+  }
 }

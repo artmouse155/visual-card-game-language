@@ -17,14 +17,22 @@ export class Blackjack extends Game {
     const hand = new Tuple();
     stack.flip();
     stack.shuffle();
-    stack.reveal(hand, 5);
+    // stack.reveal(hand, 5);
     const startButton = this.addButton(325, 250, "Start!");
     startButton.bindClick(() => {
       console.log(stack.toString(), hand.toString());
-      this.addTupleNode(200, 200, stack);
-      this.addTupleNode(50, 50, hand);
+      const dealerPile = this.addTupleNode(200, 200, stack);
+      const playerHand = this.addTupleNode(50, 50, hand);
       this.addLabel(300, 50, "Blackjack");
       startButton.hide();
+      const moveButton = this.addButton(325, 300, "Flip");
+      moveButton.bindClick(() => {
+        console.log("moveButton clicked");
+        const dealerPileSize = dealerPile.getSize();
+        dealerPile.moveCard((c: Card, index: number) => {
+          return index == dealerPileSize - 1;
+        }, playerHand);
+      });
     });
   }
 }

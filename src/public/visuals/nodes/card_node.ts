@@ -14,6 +14,10 @@ export class CardNode extends CanvasItem {
     this.addChild(new Label(globalPosition, card.toString()));
   }
 
+  getCard(): Card {
+    return this.card;
+  }
+
   _draw(ctx: CanvasRenderingContext2D): void {
     for (const child of this.get_children()) {
       (child as Label).text = this.card.toString();
