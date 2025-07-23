@@ -15,7 +15,7 @@ export class Blackjack extends Game {
     const deck = new Deck(Orders.DEFAULT, 2);
     const stack = new Stack(deck.getCards());
     stack.flip();
-    // stack.shuffle();
+    stack.shuffle();
     const hand = new Tuple();
     stack.reveal(hand, 5);
     console.log(stack.toString(), hand.toString());

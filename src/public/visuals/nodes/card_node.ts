@@ -31,15 +31,9 @@ export class CardNode extends CanvasItem {
 
   _process(delta: number): void {
     super._process(delta);
-    if (this.dragged) console.log("bam");
   }
 
-  _on_click(mousePos: Vector2): boolean {
-    super._on_click(mousePos);
-    if (this.touchingMouse && !this.dragged) {
-      this.card.flip();
-      return false;
-    }
-    return true;
+  _on_click(mousePos: Vector2): void {
+    this.card.flip();
   }
 }
