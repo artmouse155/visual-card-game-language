@@ -89,6 +89,6 @@ export class Renderer {
     ctx.lineWidth = 1;
     ctx.strokeStyle = "black";
 
-    this.root._draw(ctx);
+    this.root._propagate_draw(ctx);
   }
 }

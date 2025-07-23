@@ -33,6 +33,5 @@ export class TupleNode extends CanvasItem {
       this.size.x,
       this.size.y
     );
-    super._draw(ctx); // Draw children
   }
 }

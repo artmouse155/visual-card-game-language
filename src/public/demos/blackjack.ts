@@ -26,8 +26,5 @@ export class Blackjack extends Game {
       this.addLabel(300, 50, "Blackjack");
       startButton.hide();
     });
-    // this.bindButton("render", () => {
-    //   this.renderer.render();
-    // });
   }
 }

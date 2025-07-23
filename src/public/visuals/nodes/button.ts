@@ -20,7 +20,6 @@ export class Button extends CanvasItem {
       this.size.x,
       this.size.y
     );
-    super._draw(ctx);
   }
 
   bindClick(fn: CallableFunction): void {

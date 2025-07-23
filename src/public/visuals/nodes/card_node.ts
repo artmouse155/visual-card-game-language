@@ -31,11 +31,6 @@ export class CardNode extends CanvasItem {
     );
 
     ctx.shadowColor = "#ffffff00";
-    super._draw(ctx);
-  }
-
-  _process(delta: number): void {
-    super._process(delta);
   }
 
   _on_click(mousePos: Vector2): void {

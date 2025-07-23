@@ -47,6 +47,5 @@ export class Label extends CanvasItem {
       this.globalPosition.x,
       this.globalPosition.y + this.size.y
     );
-    super._draw(ctx);
   }
 }

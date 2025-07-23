@@ -28,10 +28,10 @@ export class VCGLNode {
     this.inTree = true;
   }
 
-  _process(delta: number): void {
+  _propagate_process(delta: number): void {
     this.propagate_to_children(
       (t: VCGLNode) => {
-        return t._process(delta);
+        return t._propagate_process(delta);
       },
       null,
       false,
@@ -40,7 +40,10 @@ export class VCGLNode {
         return t.inTree;
       }
     );
+    this._process(delta);
   }
+
+  _process(delta: number): void {}
 
   addChild<Type extends VCGLNode>(node: Type): Type {
     this.children.push(node);

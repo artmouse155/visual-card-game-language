@@ -54,10 +54,11 @@ export class CanvasItem extends VCGLNode {
     this.visible = false;
   }
 
-  _draw(ctx: CanvasRenderingContext2D): void {
+  _propagate_draw(ctx: CanvasRenderingContext2D): void {
+    this._draw(ctx); // Draw our children after us
     this.propagate_to_children(
       (t: CanvasItem) => {
-        return t._draw(ctx);
+        return t._propagate_draw(ctx);
       },
       null,
       false,
@@ -67,6 +68,8 @@ export class CanvasItem extends VCGLNode {
       }
     );
   }
+
+  _draw(ctx: CanvasRenderingContext2D): void {}
 
   _on_mouse_move(
     mousePos: Vector2,
