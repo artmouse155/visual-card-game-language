@@ -72,8 +72,8 @@ export class Renderer {
     }
   }
 
-  addChild(node: VCGLNode) {
-    this.root.add_child(node);
+  addChild<Type extends VCGLNode>(node: Type): Type {
+    return this.root.addChild(node);
   }
 
   render(): void {

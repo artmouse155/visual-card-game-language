@@ -22,16 +22,34 @@ export class CanvasItem extends VCGLNode {
   scale = Vector2.ONE;
 
   // option flags
-  enable_dragging = false;
+  enableDragging = false;
+  enableFocus = true; // Required for enable_dragging
+  get canDrag() {
+    return this.enableDragging && this.enableFocus;
+  }
 
   touchingMouse = false;
   mouseFocus = false;
+  get canFocus() {
+    return this.enableFocus && this.visible;
+  }
+
   dragged = false; // true if dragging moved this node
+
+  visible = true;
 
   constructor(globalPosition: Vector2, size: Vector2 = Vector2.ZERO) {
     super();
     this.globalPosition = globalPosition;
     this.size = size;
+  }
+
+  show(): void {
+    this.visible = true;
+  }
+
+  hide(): void {
+    this.visible = false;
   }
 
   _draw(ctx: CanvasRenderingContext2D): void {
@@ -41,25 +59,11 @@ export class CanvasItem extends VCGLNode {
       },
       null,
       false,
-      false
-    );
-  }
-
-  propagate_to_children<Type extends VCGLNode, Return>(
-    func: (t: Type) => Return,
-    success: Return,
-    limitable: boolean = false,
-    reverse: boolean = true
-  ): Return {
-    const children = [...this.get_children()];
-    for (const child of reverse ? children.reverse() : children) {
-      const typeChild = child as Type;
-      const result = func(typeChild);
-      if (!result && limitable) {
-        return result;
+      false,
+      (t: CanvasItem) => {
+        return t.visible;
       }
-    }
-    return success;
+    );
   }
 
   _on_mouse_move(
@@ -80,23 +84,13 @@ export class CanvasItem extends VCGLNode {
       this.size,
       mousePos
     );
-    if (this.mouseFocus) {
+    if (this.canDrag && this.canFocus) {
       this.dragged = true;
       this.globalPosition = this.globalPosition.plus(mouseDelta);
       return false;
     }
     return true;
   }
-
-  // _on_click(mousePos: Vector2): boolean {
-  //   return this.propagate_to_children(
-  //     (t: CanvasItem) => {
-  //       return t._on_click(mousePos);
-  //     },
-  //     true,
-  //     true
-  //   );
-  // }
 
   _on_click(mousePos: Vector2): void {}
 
@@ -113,7 +107,7 @@ export class CanvasItem extends VCGLNode {
     ) {
       return false;
     }
-    if (this.enable_dragging && this.touchingMouse) {
+    if (this.canFocus && this.touchingMouse) {
       this.mouseFocus = true;
       return false;
     }
@@ -133,7 +127,7 @@ export class CanvasItem extends VCGLNode {
     ) {
       return false;
     }
-    if (this.mouseFocus && !this.dragged) {
+    if (this.touchingMouse && this.mouseFocus && !this.dragged) {
       this._on_click(mousePos);
     }
     this.dragged = false;

@@ -10,8 +10,8 @@ export class CardNode extends CanvasItem {
   constructor(globalPosition: Vector2, card: Card) {
     super(globalPosition, new Vector2(80, 120));
     this.card = card;
-    this.enable_dragging = true;
-    this.add_child(new Label(globalPosition, card.toString()));
+    this.enableDragging = true;
+    this.addChild(new Label(globalPosition, card.toString()));
   }
 
   _draw(ctx: CanvasRenderingContext2D): void {

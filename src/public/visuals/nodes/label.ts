@@ -18,13 +18,12 @@ export class Label extends CanvasItem {
   constructor(globalPosition: Vector2, text: string) {
     super(globalPosition, new Vector2(100, 100));
     this.text = text;
-    this.enable_dragging = false;
+    this.enableFocus = false;
   }
 
   _draw(ctx: CanvasRenderingContext2D): void {
-    // TODO: Move this somewhere else
-    const metrics = ctx.measureText(this.text);
     if (this.scheduleResize) {
+      const metrics = ctx.measureText(this.text);
       this.size.x = metrics.width;
       this.size.y =
         metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
@@ -33,12 +32,12 @@ export class Label extends CanvasItem {
 
     ctx.fillStyle = "black";
     ctx.font = "30px Arial";
-    ctx.strokeRect(
-      this.globalPosition.x,
-      this.globalPosition.y,
-      this.size.x,
-      this.size.y
-    );
+    // ctx.strokeRect(
+    //   this.globalPosition.x,
+    //   this.globalPosition.y,
+    //   this.size.x,
+    //   this.size.y
+    // );
     ctx.fillText(
       this.text,
       this.globalPosition.x,
