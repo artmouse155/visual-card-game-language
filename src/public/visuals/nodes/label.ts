@@ -20,7 +20,7 @@ export class Label extends CanvasItem {
   constructor(globalPosition: Vector2, text: string) {
     super(globalPosition, new Vector2(100, 100));
     this.text = text;
-    this.enableFocus = false;
+    this.FocusEnabled = false;
   }
 
   _draw(ctx: CanvasRenderingContext2D): void {

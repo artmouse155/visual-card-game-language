@@ -9,7 +9,7 @@ export class TupleNode extends CanvasItem {
     for (const card of cards) {
       this.addChild(new CardNode(globalPosition, card));
     }
-    this.enableDragging = false;
+    this.draggingEnabled = false;
   }
 
   _draw(ctx: CanvasRenderingContext2D) {

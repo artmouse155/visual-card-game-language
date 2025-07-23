@@ -21,17 +21,19 @@ export class CanvasItem extends VCGLNode {
   size = Vector2.ZERO;
   scale = Vector2.ONE;
 
+  hasGlow = false;
+
   // option flags
-  enableDragging = false;
-  enableFocus = true; // Required for enable_dragging
+  draggingEnabled = false;
+  FocusEnabled = true; // Required for enable_dragging
   get canDrag() {
-    return this.enableDragging && this.enableFocus;
+    return this.draggingEnabled && this.FocusEnabled;
   }
 
-  touchingMouse = false;
-  mouseFocus = false;
+  isTouchingMouse = false;
+  hasMouseFocus = false;
   get canFocus() {
-    return this.enableFocus && this.visible;
+    return this.FocusEnabled && this.visible;
   }
 
   dragged = false; // true if dragging moved this node
@@ -72,19 +74,23 @@ export class CanvasItem extends VCGLNode {
     mouseDown: boolean
   ): boolean {
     // Boolean return tells us if we can continue
-    for (const child of this.get_children()) {
-      if (
-        !(child as CanvasItem)._on_mouse_move(mousePos, mouseDelta, mouseDown)
-      ) {
-        return false;
-      }
+    if (
+      !this.propagate_to_children(
+        (t: CanvasItem) => {
+          return t._on_mouse_move(mousePos, mouseDelta, mouseDown);
+        },
+        true,
+        true
+      )
+    ) {
+      return false;
     }
-    this.touchingMouse = Vector2.posInRect(
+    this.isTouchingMouse = Vector2.posInRect(
       this.globalPosition,
       this.size,
       mousePos
     );
-    if (this.canDrag && this.canFocus) {
+    if (this.canDrag && this.hasMouseFocus) {
       this.dragged = true;
       this.globalPosition = this.globalPosition.plus(mouseDelta);
       return false;
@@ -107,8 +113,8 @@ export class CanvasItem extends VCGLNode {
     ) {
       return false;
     }
-    if (this.canFocus && this.touchingMouse) {
-      this.mouseFocus = true;
+    if (this.canFocus && this.isTouchingMouse) {
+      this.hasMouseFocus = true;
       return false;
     }
     return true;
@@ -127,11 +133,11 @@ export class CanvasItem extends VCGLNode {
     ) {
       return false;
     }
-    if (this.touchingMouse && this.mouseFocus && !this.dragged) {
+    if (this.isTouchingMouse && this.hasMouseFocus && !this.dragged) {
       this._on_click(mousePos);
     }
     this.dragged = false;
-    this.mouseFocus = false;
+    this.hasMouseFocus = false;
     return true;
   }
 }
