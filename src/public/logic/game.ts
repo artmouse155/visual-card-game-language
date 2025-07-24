@@ -4,6 +4,7 @@ import { Renderer } from "../visuals/renderer.js";
 import { TupleNode } from "../visuals/nodes/tuple_node.js";
 import { Vector2 } from "../visuals/utlis.js";
 import { Button } from "../visuals/nodes/button.js";
+import { Card } from "./card.js";
 
 export class Game {
   renderer: Renderer = new Renderer();
@@ -22,7 +23,7 @@ export class Game {
     console.log("YOU WIN!");
   }
 
-  addTupleNode(x: number, y: number, tuple: Tuple): TupleNode {
+  addTupleNode(x: number, y: number, tuple?: Card[]): TupleNode {
     return this.renderer.addChild(new TupleNode(new Vector2(x, y), tuple));
   }
 

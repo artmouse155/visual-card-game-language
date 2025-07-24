@@ -23,12 +23,25 @@ export class Blackjack extends Game {
       console.log(stack.toString(), hand.toString());
       const dealerPile = this.addTupleNode(200, 200, stack);
       const playerHand = this.addTupleNode(50, 50, hand);
+      const acesPile = this.addTupleNode(300, 50);
       this.addLabel(300, 50, "Blackjack");
       startButton.hide();
-      const moveButton = this.addButton(325, 300, "Flip");
-      moveButton.bindClick(() => {
-        console.log("moveButton clicked");
+      const flipButton = this.addButton(325, 300, "Flip");
+      flipButton.bindClick(() => {
+        console.log("flipButton clicked");
         dealerPile.reveal(playerHand, 2);
+      });
+
+      const grabAceButton = this.addButton(325, 500, "Grab Ace");
+      grabAceButton.bindClick(() => {
+        dealerPile.moveCard(
+          (c: Card, index: number) => {
+            return (c as SuitCard).rank == ("A" as Rank);
+          },
+          acesPile,
+          undefined,
+          true
+        );
       });
     });
   }

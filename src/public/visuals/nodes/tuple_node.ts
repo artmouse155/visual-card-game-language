@@ -1,5 +1,4 @@
 import { Card } from "../../logic/card.js";
-import { Tuple } from "../../logic/tuple.js";
 import { Vector2 } from "../utlis.js";
 import { CanvasItem } from "./canvas_item.js";
 import { CardNode } from "./card_node.js";
@@ -19,10 +18,12 @@ export class TupleNode extends CanvasItem {
     return out;
   }
 
-  constructor(position: Vector2, cards: Card[]) {
+  constructor(position: Vector2, cards?: Card[]) {
     super(position, new Vector2(80, 120));
-    for (const card of cards) {
-      this.addChild(new CardNode(Vector2.ZERO, card));
+    if (cards) {
+      for (const card of cards) {
+        this.addChild(new CardNode(Vector2.ZERO, card));
+      }
     }
     this.draggingEnabled = false;
   }
