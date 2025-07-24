@@ -3,6 +3,7 @@ import { Tuple } from "../../logic/tuple.js";
 import { Vector2 } from "../utlis.js";
 import { CanvasItem } from "./canvas_item.js";
 import { CardNode } from "./card_node.js";
+import { VCGLNode } from "./vgcl_node.js";
 
 export class TupleNode extends CanvasItem {
   cardSpacing = 5;
@@ -24,6 +25,18 @@ export class TupleNode extends CanvasItem {
       this.addChild(new CardNode(Vector2.ZERO, card));
     }
     this.draggingEnabled = false;
+  }
+
+  addChild<Type extends VCGLNode>(node: Type): Type {
+    super.addChild(node);
+    this.updateCardPositions();
+    return node;
+  }
+
+  removeChild(index: number): VCGLNode {
+    const node = super.removeChild(index);
+    this.updateCardPositions();
+    return node;
   }
 
   getCards(): Card[] {
@@ -54,13 +67,10 @@ export class TupleNode extends CanvasItem {
    * @param reverseChildren
    */
 
-  _process(delta: number): void {
+  updateCardPositions(): void {
     const cardNodes = this.cardNodes;
     for (let index = 0; index < cardNodes.length; index++) {
-      cardNodes[index].position = new Vector2(
-        cardNodes[index].position.x,
-        index * this.cardSpacing
-      );
+      cardNodes[index].position = new Vector2(0, index * this.cardSpacing);
     }
   }
   moveCard(

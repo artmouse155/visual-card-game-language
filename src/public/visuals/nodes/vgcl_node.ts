@@ -91,7 +91,7 @@ export class VCGLNode {
       }
     }
     if (found) {
-      this.children.splice(index, 1);
+      this.removeChild(index);
       newParent.addChild(child);
       if (destinationIndex) {
         newParent.reorderChild(child, destinationIndex);
@@ -104,6 +104,10 @@ export class VCGLNode {
         this
       );
     }
+  }
+
+  removeChild(index: number): VCGLNode {
+    return this.children.splice(index, 1)[0];
   }
 
   reorderChild(child: VCGLNode, destinationIndex: number): void {
@@ -119,7 +123,7 @@ export class VCGLNode {
       }
     }
     if (found) {
-      this.children.splice(index, 1);
+      this.removeChild(index);
       this.children.splice(destinationIndex, 0, child);
     } else {
       console.error(
