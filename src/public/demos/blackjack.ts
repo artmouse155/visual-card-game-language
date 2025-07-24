@@ -28,10 +28,7 @@ export class Blackjack extends Game {
       const moveButton = this.addButton(325, 300, "Flip");
       moveButton.bindClick(() => {
         console.log("moveButton clicked");
-        const dealerPileSize = dealerPile.getSize();
-        dealerPile.moveCard((c: Card, index: number) => {
-          return index == dealerPileSize - 1;
-        }, playerHand);
+        dealerPile.reveal(playerHand, 2);
       });
     });
   }

@@ -23,7 +23,7 @@ export class Renderer {
     const FPS = 60;
 
     const processInterval = setInterval(() => {
-      this.root._process(1 / FPS);
+      this.root._propagate_process(1 / FPS);
       this.render();
     }, 1000 / FPS);
 

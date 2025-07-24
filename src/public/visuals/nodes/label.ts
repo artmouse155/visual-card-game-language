@@ -3,6 +3,7 @@ import { CanvasItem } from "./canvas_item.js";
 
 export class Label extends CanvasItem {
   _text: string = "";
+  fontSize: number = 30;
 
   set text(value: string) {
     if (this._text != value) {
@@ -17,15 +18,18 @@ export class Label extends CanvasItem {
 
   scheduleResize = false;
 
-  constructor(position: Vector2, text: string) {
+  constructor(position: Vector2, text: string, fontSize?: number) {
     super(position, new Vector2(100, 100));
     this.text = text;
     this.FocusEnabled = false;
+    if (fontSize) {
+      this.fontSize = fontSize;
+    }
   }
 
   _draw(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = "black";
-    ctx.font = "30px Arial";
+    ctx.font = `${this.fontSize}px Arial`;
 
     if (this.scheduleResize) {
       const metrics = ctx.measureText(this.text);

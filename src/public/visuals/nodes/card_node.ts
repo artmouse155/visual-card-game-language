@@ -11,7 +11,7 @@ export class CardNode extends CanvasItem {
     super(position, new Vector2(80, 120));
     this.card = card;
     this.draggingEnabled = true;
-    this.addChild(new Label(Vector2.ZERO, card.toString()));
+    this.addChild(new Label(Vector2.ZERO, card.toString(), 25));
   }
 
   getCard(): Card {
@@ -26,7 +26,14 @@ export class CardNode extends CanvasItem {
     ctx.shadowOffsetY = 5;
     ctx.shadowColor = this.hasGlow ? "#000000ff" : "#ffffff00";
 
-    ctx.fillStyle = this.card.faceup ? "#aad5a2ff" : "red";
+    ctx.strokeRect(
+      this.globalPosition.x,
+      this.globalPosition.y,
+      this.size.x,
+      this.size.y
+    );
+
+    ctx.fillStyle = this.card.faceup ? "#e2e2e2ff" : "#b72121ff";
     ctx.fillRect(
       this.globalPosition.x,
       this.globalPosition.y,
