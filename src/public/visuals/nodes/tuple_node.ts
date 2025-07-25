@@ -4,10 +4,23 @@ import { CanvasItem } from "./canvas_item.js";
 import { CardNode } from "./card_node.js";
 import { VCGLNode } from "./vgcl_node.js";
 
-export class TupleNode extends CanvasItem {
-  cardSpacing = 5;
+export type TupleNodeType =
+  | "drawpile"
+  | "hand"
+  | "staggered"
+  | "staggered_right";
 
-  get cardNodes(): CardNode[] {
+const tupleNodeTypeOffsets: Record<TupleNodeType, Vector2> = {
+  drawpile: new Vector2(0, 0),
+  hand: new Vector2(40, 0),
+  staggered: new Vector2(0, 10),
+  staggered_right: new Vector2(20, 0),
+};
+
+export class TupleNode extends CanvasItem {
+  tupleNodeType: TupleNodeType = "drawpile";
+
+  getCardNodes(): CardNode[] {
     let out: CardNode[] = [];
     for (const child of this.get_children()) {
       const cardChild = child as CardNode;
@@ -18,14 +31,21 @@ export class TupleNode extends CanvasItem {
     return out;
   }
 
-  constructor(position: Vector2, cards?: Card[]) {
+  constructor(
+    position: Vector2,
+    tupleNodeType?: TupleNodeType,
+    cards?: Card[]
+  ) {
     super(position, new Vector2(80, 120));
     if (cards) {
       for (const card of cards) {
         this.addChild(new CardNode(Vector2.ZERO, card));
       }
     }
-    this.draggingEnabled = false;
+    if (tupleNodeType) {
+      this.tupleNodeType = tupleNodeType;
+    }
+    this.updateCardPositions();
   }
 
   addChild<Type extends VCGLNode>(node: Type): Type {
@@ -41,7 +61,7 @@ export class TupleNode extends CanvasItem {
   }
 
   getCards(): Card[] {
-    return this.cardNodes.map((c: CardNode) => {
+    return this.getCardNodes().map((c: CardNode) => {
       return c.getCard();
     });
   }
@@ -69,11 +89,16 @@ export class TupleNode extends CanvasItem {
    */
 
   updateCardPositions(): void {
-    const cardNodes = this.cardNodes;
+    const cardNodes = this.getCardNodes();
+    const cardSpacing = tupleNodeTypeOffsets[this.tupleNodeType];
     for (let index = 0; index < cardNodes.length; index++) {
-      cardNodes[index].position = new Vector2(0, index * this.cardSpacing);
+      cardNodes[index].position = new Vector2(
+        index * cardSpacing.x,
+        index * cardSpacing.y
+      );
     }
   }
+
   moveCard(
     conditionFunc: (c: Card, index: number) => boolean,
     destination: TupleNode,
@@ -81,7 +106,7 @@ export class TupleNode extends CanvasItem {
     flipCard?: boolean,
     reverseChildren?: boolean
   ): void {
-    const cardNodes = this.cardNodes;
+    const cardNodes = this.getCardNodes();
     if (reverseChildren) {
       cardNodes.reverse();
     }
@@ -106,7 +131,7 @@ export class TupleNode extends CanvasItem {
         this.reparent(cardNode, destination);
       }
       if (flipCard) {
-        cardNode.getCard().flip();
+        cardNode.flip();
       }
     } else {
       console.error(
@@ -130,6 +155,53 @@ export class TupleNode extends CanvasItem {
         undefined,
         true
       );
+    }
+  }
+
+  draw(
+    destination: TupleNode,
+    count: number = 1,
+    reverseChildren?: boolean
+  ): void {
+    for (let index = 0; index < count; index++) {
+      const thisPileSize = this.getSize();
+      this.moveCard(
+        (c: Card, index: number) => {
+          return index == thisPileSize - 1;
+        },
+        destination,
+        undefined,
+        false
+      );
+    }
+  }
+
+  shuffle(): void {
+    const randInRange = (min: number, max: number): number => {
+      return Math.floor(Math.random() * (max - min)) + min;
+    };
+
+    let temp: TupleNode = new TupleNode(Vector2.ZERO);
+    while (this.getCardNodes().length > 0) {
+      const index = randInRange(0, this.getCardNodes().length);
+      temp.addChild(this.removeChild(index));
+    }
+    while (temp.getCardNodes().length > 0) {
+      this.addChild(temp.removeChild(0));
+    }
+  }
+
+  flip(): void {
+    this.reverse();
+    for (const cardNode of this.getCardNodes()) {
+      cardNode.flip();
+    }
+  }
+
+  reverse(): void {
+    const cardNodes = this.getCardNodes();
+    for (const cardNode of this.getCardNodes()) {
+      this.reorderChild(cardNode, 0);
     }
   }
 }

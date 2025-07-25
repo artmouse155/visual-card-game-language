@@ -1,4 +1,3 @@
-import { Tuple } from "../logic/tuple.js"; // ts extension gone
 import { CanvasItem } from "./nodes/canvas_item.js";
 import { VCGLNode } from "./nodes/vgcl_node.js";
 import { Vector2 } from "./utlis.js";

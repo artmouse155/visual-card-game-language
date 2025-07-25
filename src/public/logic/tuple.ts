@@ -1,7 +1,7 @@
 import type { Suit, Rank } from "./constants.js"; // ts extension gone
 import { Card, SuitCard, Joker } from "./card.js"; // ts extension gone
 
-export class Tuple extends Array<Card> {
+class Tuple extends Array<Card> {
   x = 0;
   y = 0;
 

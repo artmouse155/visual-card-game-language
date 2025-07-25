@@ -35,6 +35,10 @@ export class SuitCard extends Card {
   toString(): string {
     return this.faceup ? `${this.rank}${SuitEmojis[this.suit]} ` : "🂠";
   }
+
+  getValue(): number {
+    return this.order.RankOrder[this.rank];
+  }
 }
 
 export class Joker extends Card {

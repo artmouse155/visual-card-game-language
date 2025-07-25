@@ -1,7 +1,6 @@
 import type { Suit, Rank, Order } from "./constants.js"; // ts extension gone
 import { Orders } from "./constants.js"; // ts extension gone
 import { Card, SuitCard, Joker } from "./card.js"; // ts extension gone
-import { Tuple } from "./tuple.js"; // ts extension gone
 
 export class Deck {
   static STANDARD = new Deck(Orders.ACE_HIGH);

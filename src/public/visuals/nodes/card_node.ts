@@ -10,7 +10,7 @@ export class CardNode extends CanvasItem {
   constructor(position: Vector2, card: Card) {
     super(position, new Vector2(80, 120));
     this.card = card;
-    this.draggingEnabled = true;
+    this.draggingEnabled = false;
     this.addChild(new Label(Vector2.ZERO, card.toString(), 25));
   }
 
@@ -44,7 +44,7 @@ export class CardNode extends CanvasItem {
     ctx.shadowColor = "#ffffff00";
   }
 
-  _on_click(mousePos: Vector2): void {
+  flip(): void {
     this.card.flip();
   }
 
@@ -54,7 +54,7 @@ export class CardNode extends CanvasItem {
     mouseDown: boolean
   ): boolean {
     super._on_mouse_move(mousePos, mouseDelta, mouseDown);
-    this.hasGlow = this.hasMouseFocus;
+    this.hasGlow = this.hasMouseFocus && this.draggingEnabled;
     return true;
   }
 }
