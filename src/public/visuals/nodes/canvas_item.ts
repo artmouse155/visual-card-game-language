@@ -2,16 +2,16 @@ import { Vector2 } from "../utlis.js";
 import { VCGLNode } from "./vgcl_node.js";
 
 export class CanvasItem extends VCGLNode {
-  _parentGlobalPosition: Vector2 = Vector2.ZERO;
+  protected _parentGlobalPosition: Vector2 = Vector2.ZERO;
   // _scheduleChildrenGlobalPositionUpdate = true;
-  _position: Vector2 = Vector2.ZERO;
+  protected _position: Vector2 = Vector2.ZERO;
 
-  set globalPosition(value: Vector2) {
+  protected set globalPosition(value: Vector2) {
     const diff = value.minus(this.globalPosition);
     this.position = this.position.plus(diff);
   }
 
-  get globalPosition(): Vector2 {
+  protected get globalPosition(): Vector2 {
     return this._parentGlobalPosition.plus(this.position);
   }
 
@@ -24,7 +24,7 @@ export class CanvasItem extends VCGLNode {
     return this._position;
   }
 
-  updateChildrenGlobalPosition() {
+  protected updateChildrenGlobalPosition() {
     for (const child of this.get_children()) {
       (child as CanvasItem)._parentGlobalPosition = this.globalPosition;
       (child as CanvasItem).updateChildrenGlobalPosition();
@@ -34,22 +34,22 @@ export class CanvasItem extends VCGLNode {
   size = Vector2.ZERO;
   scale = Vector2.ONE;
 
-  hasGlow = false;
+  protected hasGlow = false;
 
   // option flags
   draggingEnabled = false;
   FocusEnabled = true; // Required for enable_dragging
-  get canDrag() {
+  protected get canDrag() {
     return this.draggingEnabled && this.FocusEnabled;
   }
 
   isTouchingMouse = false;
   hasMouseFocus = false;
-  get canFocus() {
+  protected get canFocus() {
     return this.FocusEnabled && this.visible;
   }
 
-  dragged = false; // true if dragging moved this node
+  protected dragged = false; // true if dragging moved this node
 
   visible = true;
 
@@ -67,7 +67,7 @@ export class CanvasItem extends VCGLNode {
     this.visible = false;
   }
 
-  _propagate_draw(ctx: CanvasRenderingContext2D): void {
+  private _propagate_draw(ctx: CanvasRenderingContext2D): void {
     this._draw(ctx); // Draw our children after us
     this.propagate_to_children(
       (t: CanvasItem) => {
@@ -82,7 +82,7 @@ export class CanvasItem extends VCGLNode {
     );
   }
 
-  addChild<Type extends VCGLNode>(node: Type): Type {
+  protected addChild<Type extends VCGLNode>(node: Type): Type {
     super.addChild(node);
     this.updateChildrenGlobalPosition();
     return node;
@@ -94,14 +94,14 @@ export class CanvasItem extends VCGLNode {
   // }
 
   // Pretends like we moved a bit when whe first start to make it so that our children
-  _draw(ctx: CanvasRenderingContext2D): void {
+  protected _draw(ctx: CanvasRenderingContext2D): void {
     // if (this._scheduleChildrenGlobalPositionUpdate) {
     //   this.updateChildrenGlobalPosition();
     //   this._scheduleChildrenGlobalPositionUpdate = false;
     // }
   }
 
-  _on_mouse_move(
+  protected _on_mouse_move(
     mousePos: Vector2,
     mouseDelta: Vector2,
     mouseDown: boolean
@@ -131,9 +131,9 @@ export class CanvasItem extends VCGLNode {
     return true;
   }
 
-  _on_click(mousePos: Vector2): void {}
+  protected _on_click(mousePos: Vector2): void {}
 
-  _on_mouse_down(mousePos: Vector2): boolean {
+  protected _on_mouse_down(mousePos: Vector2): boolean {
     // Boolean return tells us if we can continue
     if (
       !this.propagate_to_children(
@@ -153,7 +153,7 @@ export class CanvasItem extends VCGLNode {
     return true;
   }
 
-  _on_mouse_up(mousePos: Vector2): boolean {
+  protected _on_mouse_up(mousePos: Vector2): boolean {
     // Boolean return tells us if we can continue
     if (
       !this.propagate_to_children(

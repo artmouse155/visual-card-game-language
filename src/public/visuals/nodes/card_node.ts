@@ -5,7 +5,7 @@ import { CanvasItem } from "./canvas_item.js";
 import { Label } from "./label.js";
 
 export class CardNode extends CanvasItem {
-  card: Card = new Card(Orders.DEFAULT);
+  protected card: Card = new Card(Orders.DEFAULT);
 
   constructor(position: Vector2, card: Card) {
     super(position, new Vector2(80, 120));
@@ -18,7 +18,7 @@ export class CardNode extends CanvasItem {
     return this.card;
   }
 
-  _draw(ctx: CanvasRenderingContext2D): void {
+  protected _draw(ctx: CanvasRenderingContext2D): void {
     for (const child of this.get_children()) {
       (child as Label).text = this.card.toString();
     }
@@ -48,7 +48,7 @@ export class CardNode extends CanvasItem {
     this.card.flip();
   }
 
-  _on_mouse_move(
+  protected _on_mouse_move(
     mousePos: Vector2,
     mouseDelta: Vector2,
     mouseDown: boolean

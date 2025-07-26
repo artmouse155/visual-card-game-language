@@ -1,9 +1,9 @@
 export class VCGLNode {
-  children: Array<VCGLNode> = [];
-  inTree: boolean = false;
-  readyCalled: boolean = false;
+  protected children: Array<VCGLNode> = [];
+  protected inTree: boolean = false;
+  protected readyCalled: boolean = false;
 
-  propagate_to_children<Type extends VCGLNode, Return>(
+  protected propagate_to_children<Type extends VCGLNode, Return>(
     func: (t: Type) => Return,
     success: Return,
     limitable: boolean = false,
@@ -25,7 +25,7 @@ export class VCGLNode {
     return success;
   }
 
-  _propagate_add_to_tree(): void {
+  protected _propagate_add_to_tree(): void {
     this.inTree = true;
     if (!this.readyCalled) {
       this._ready();
@@ -40,12 +40,12 @@ export class VCGLNode {
     );
   }
 
-  _ready(): void {
+  protected _ready(): void {
     this.readyCalled = true;
     this.inTree = true;
   }
 
-  _propagate_process(delta: number): void {
+  protected _propagate_process(delta: number): void {
     this.propagate_to_children(
       (t: VCGLNode) => {
         return t._propagate_process(delta);
@@ -60,9 +60,9 @@ export class VCGLNode {
     this._process(delta);
   }
 
-  _process(delta: number): void {}
+  protected _process(delta: number): void {}
 
-  addChild<Type extends VCGLNode>(node: Type): Type {
+  protected addChild<Type extends VCGLNode>(node: Type): Type {
     this.children.push(node);
     if (this.inTree) {
       node._propagate_add_to_tree();
@@ -70,11 +70,11 @@ export class VCGLNode {
     return node;
   }
 
-  get_children(): Array<VCGLNode> {
+  protected get_children(): Array<VCGLNode> {
     return this.children;
   }
 
-  reparent(
+  protected reparent(
     child: VCGLNode,
     newParent: VCGLNode,
     destinationIndex?: number
@@ -106,11 +106,11 @@ export class VCGLNode {
     }
   }
 
-  removeChild(index: number): VCGLNode {
+  protected removeChild(index: number): VCGLNode {
     return this.children.splice(index, 1)[0];
   }
 
-  reorderChild(child: VCGLNode, destinationIndex: number): void {
+  protected reorderChild(child: VCGLNode, destinationIndex: number): void {
     // Step 1: Find index of the child in the current parent
     let index = 0;
     let found = false;

@@ -36,10 +36,6 @@ export class Renderer {
       this.oldMousePos = newMousePos;
     });
 
-    // this.canvas.addEventListener("click", (e) => {
-    //   this.root._on_click(new Vector2(e.offsetX, e.offsetY));
-    // });
-
     this.canvas.addEventListener("mousedown", (e) => {
       this.mouseDown = true;
       this.root._on_mouse_down(new Vector2(e.offsetX, e.offsetY));

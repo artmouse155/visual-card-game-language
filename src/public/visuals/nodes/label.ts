@@ -2,7 +2,7 @@ import { Vector2 } from "../utlis.js";
 import { CanvasItem } from "./canvas_item.js";
 
 export class Label extends CanvasItem {
-  _text: string = "";
+  private _text: string = "";
   fontSize: number = 30;
 
   set text(value: string) {
@@ -16,7 +16,7 @@ export class Label extends CanvasItem {
     return this._text;
   }
 
-  scheduleResize = false;
+  private scheduleResize = false;
 
   constructor(position: Vector2, text: string, fontSize?: number) {
     super(position, new Vector2(100, 100));
@@ -27,9 +27,9 @@ export class Label extends CanvasItem {
     }
   }
 
-  _draw(ctx: CanvasRenderingContext2D): void {
+  protected _draw(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = "black";
-    ctx.font = `${this.fontSize}px Arial`;
+    ctx.font = `${this.fontSize}px Verdana`;
 
     if (this.scheduleResize) {
       const metrics = ctx.measureText(this.text);
