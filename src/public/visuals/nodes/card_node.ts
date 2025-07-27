@@ -1,11 +1,11 @@
 import { Card } from "../../logic/card.js";
-import { Orders } from "../../logic/constants.js";
 import { Vector2 } from "../utlis.js";
 import { CanvasItem } from "./canvas_item.js";
 import { Label } from "./label.js";
+import { cardRect } from "./tuple_node.js";
 
 export class CardNode extends CanvasItem {
-  protected card: Card = new Card(Orders.DEFAULT);
+  protected card: Card;
 
   constructor(position: Vector2, card: Card) {
     super(position, new Vector2(80, 120));
@@ -26,20 +26,28 @@ export class CardNode extends CanvasItem {
     ctx.shadowOffsetY = 5;
     ctx.shadowColor = this.hasGlow ? "#000000ff" : "#ffffff00";
 
-    ctx.strokeRect(
-      this.globalPosition.x,
-      this.globalPosition.y,
-      this.size.x,
-      this.size.y
+    this.drawRect(
+      ctx,
+      this.globalPosition,
+      cardRect,
+      this.card.faceup ? "#e2e2e2ff" : "#b72121ff",
+      "#000000ff"
     );
 
-    ctx.fillStyle = this.card.faceup ? "#e2e2e2ff" : "#b72121ff";
-    ctx.fillRect(
-      this.globalPosition.x,
-      this.globalPosition.y,
-      this.size.x,
-      this.size.y
-    );
+    // ctx.strokeRect(
+    //   this.globalPosition.x,
+    //   this.globalPosition.y,
+    //   this.size.x,
+    //   this.size.y
+    // );
+
+    // ctx.fillStyle = this.card.faceup ? "#e2e2e2ff" : "#b72121ff";
+    // ctx.fillRect(
+    //   this.globalPosition.x,
+    //   this.globalPosition.y,
+    //   this.size.x,
+    //   this.size.y
+    // );
 
     ctx.shadowColor = "#ffffff00";
   }

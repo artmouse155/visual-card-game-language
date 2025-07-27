@@ -1,9 +1,9 @@
 import { Vector2 } from "../utlis.js";
-import { CanvasItem } from "./canvas_item.js";
+import { CanvasItem, Rect } from "./canvas_item.js";
 import { Label } from "./label.js";
 
 export class Button extends CanvasItem {
-  label: Label = new Label(Vector2.ZERO, "");
+  label: Label;
 
   private _click_callable: CallableFunction = () => {
     console.log("No callable set.");
@@ -30,16 +30,39 @@ export class Button extends CanvasItem {
     if (disabled) {
       this.disabled = disabled;
     }
+    this.scheduleResize = true;
   }
 
   protected _draw(ctx: CanvasRenderingContext2D) {
-    ctx.fillStyle = this.disabled ? "#a3a3a3ff" : "#204da1ff";
-    ctx.fillRect(
-      this.globalPosition.x,
-      this.globalPosition.y,
-      this.size.x,
-      this.size.y
+    if (this.scheduleResize) {
+      ctx.font = `${this.label.fontSize}px Verdana`;
+      const metrics = ctx.measureText(this.text);
+
+      this.size.x = metrics.width;
+      this.size.y =
+        metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+      this.scheduleResize = false;
+    }
+    const rect: Rect = {
+      size: this.size,
+      padding_x: new Vector2(15, 15),
+      padding_y: new Vector2(15, 15),
+      border_width: 5,
+      corner_radius: 5,
+    };
+    this.drawRect(
+      ctx,
+      this.globalPosition,
+      rect,
+      this.disabled ? "#a3a3a3ff" : "#204da1ff",
+      this.disabled ? "#797979ff" : "#1a3d7fff"
     );
+    // ctx.fillRect(
+    //   this.globalPosition.x,
+    //   this.globalPosition.y,
+    //   this.size.x,
+    //   this.size.y
+    // );
   }
 
   bindClick(fn: CallableFunction): void {

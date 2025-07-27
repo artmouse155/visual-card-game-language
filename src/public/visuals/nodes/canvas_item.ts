@@ -1,6 +1,14 @@
 import { Vector2 } from "../utlis.js";
 import { VCGLNode } from "./vgcl_node.js";
 
+export interface Rect {
+  size: Vector2;
+  padding_x: Vector2;
+  padding_y: Vector2;
+  border_width: number;
+  corner_radius: number;
+}
+
 export class CanvasItem extends VCGLNode {
   protected _parentGlobalPosition: Vector2 = Vector2.ZERO;
   // _scheduleChildrenGlobalPositionUpdate = true;
@@ -32,19 +40,19 @@ export class CanvasItem extends VCGLNode {
   }
 
   size = Vector2.ZERO;
-  scale = Vector2.ONE;
+  protected scale = Vector2.ONE;
 
   protected hasGlow = false;
 
   // option flags
-  draggingEnabled = false;
-  FocusEnabled = true; // Required for enable_dragging
+  protected draggingEnabled = false;
+  protected FocusEnabled = true; // Required for enable_dragging
   protected get canDrag() {
     return this.draggingEnabled && this.FocusEnabled;
   }
 
-  isTouchingMouse = false;
-  hasMouseFocus = false;
+  protected isTouchingMouse = false;
+  protected hasMouseFocus = false;
   protected get canFocus() {
     return this.FocusEnabled && this.visible;
   }
@@ -67,7 +75,67 @@ export class CanvasItem extends VCGLNode {
     this.visible = false;
   }
 
-  private _propagate_draw(ctx: CanvasRenderingContext2D): void {
+  drawRect(
+    ctx: CanvasRenderingContext2D,
+    p: Vector2,
+    rect: Rect,
+    baseColor: string,
+    borderColor?: string
+  ) {
+    const drawP = new Vector2(p.x - rect.padding_x.x, p.y - rect.padding_y.x);
+    const drawSize = new Vector2(
+      rect.size.x + rect.padding_x.x + rect.padding_x.y,
+      rect.size.y + rect.padding_y.x + rect.padding_y.y
+    );
+
+    ctx.beginPath();
+    ctx.arc(
+      drawP.x + rect.corner_radius,
+      drawP.y + rect.corner_radius,
+      rect.corner_radius,
+      1 * Math.PI,
+      (3 / 2) * Math.PI
+    );
+    ctx.arc(
+      drawP.x + drawSize.x - rect.corner_radius,
+      drawP.y + rect.corner_radius,
+      rect.corner_radius,
+      (3 / 2) * Math.PI,
+      2 * Math.PI
+    );
+    ctx.arc(
+      drawP.x + drawSize.x - rect.corner_radius,
+      drawP.y + drawSize.y - rect.corner_radius,
+      rect.corner_radius,
+      0,
+      (1 / 2) * Math.PI
+    );
+    ctx.arc(
+      drawP.x + rect.corner_radius,
+      drawP.y + drawSize.y - rect.corner_radius,
+      rect.corner_radius,
+      (1 / 2) * Math.PI,
+      1 * Math.PI
+    );
+    ctx.lineTo(drawP.x, drawP.y + rect.corner_radius);
+    ctx.fillStyle = baseColor;
+    ctx.fill();
+
+    if (borderColor) {
+      ctx.strokeStyle = borderColor;
+      ctx.lineWidth = rect.border_width;
+      ctx.stroke();
+    }
+
+    // ctx.fillRect(
+    //   this.globalPosition.x,
+    //   this.globalPosition.y,
+    //   drawSize.x,
+    //   drawSize.y
+    // );
+  }
+
+  protected _propagate_draw(ctx: CanvasRenderingContext2D): void {
     this._draw(ctx); // Draw our children after us
     this.propagate_to_children(
       (t: CanvasItem) => {

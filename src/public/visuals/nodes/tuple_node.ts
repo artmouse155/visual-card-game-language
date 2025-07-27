@@ -1,6 +1,6 @@
 import { Card } from "../../logic/card.js";
 import { Vector2 } from "../utlis.js";
-import { CanvasItem } from "./canvas_item.js";
+import { CanvasItem, Rect } from "./canvas_item.js";
 import { CardNode } from "./card_node.js";
 import { VCGLNode } from "./vgcl_node.js";
 
@@ -10,6 +10,14 @@ export type TupleNodeType =
   | "staggered"
   | "staggered_right";
 
+export const cardRect: Rect = {
+  size: new Vector2(80, 120),
+  padding_x: Vector2.ZERO,
+  padding_y: Vector2.ZERO,
+  border_width: 2,
+  corner_radius: 5,
+};
+
 const tupleNodeTypeOffsets: Record<TupleNodeType, Vector2> = {
   drawpile: new Vector2(0, 0),
   hand: new Vector2(40, 0),
@@ -18,9 +26,9 @@ const tupleNodeTypeOffsets: Record<TupleNodeType, Vector2> = {
 };
 
 export class TupleNode extends CanvasItem {
-  tupleNodeType: TupleNodeType = "drawpile";
+  protected tupleNodeType: TupleNodeType = "drawpile";
 
-  getCardNodes(): CardNode[] {
+  protected getCardNodes(): CardNode[] {
     let out: CardNode[] = [];
     for (const child of this.get_children()) {
       const cardChild = child as CardNode;
@@ -36,7 +44,7 @@ export class TupleNode extends CanvasItem {
     tupleNodeType?: TupleNodeType,
     cards?: Card[]
   ) {
-    super(position, new Vector2(80, 120));
+    super(position, cardRect.size);
     if (cards) {
       for (const card of cards) {
         this.addChild(new CardNode(Vector2.ZERO, card));
@@ -48,13 +56,13 @@ export class TupleNode extends CanvasItem {
     this.updateCardPositions();
   }
 
-  addChild<Type extends VCGLNode>(node: Type): Type {
+  protected addChild<Type extends VCGLNode>(node: Type): Type {
     super.addChild(node);
     this.updateCardPositions();
     return node;
   }
 
-  removeChild(index: number): VCGLNode {
+  protected removeChild(index: number): VCGLNode {
     const node = super.removeChild(index);
     this.updateCardPositions();
     return node;
@@ -66,18 +74,12 @@ export class TupleNode extends CanvasItem {
     });
   }
 
-  getSize(): number {
+  protected getSize(): number {
     return this.getCards().length;
   }
 
-  _draw(ctx: CanvasRenderingContext2D) {
-    ctx.fillStyle = "#c3c3c3ff";
-    ctx.fillRect(
-      this.globalPosition.x,
-      this.globalPosition.y,
-      this.size.x,
-      this.size.y
-    );
+  protected _draw(ctx: CanvasRenderingContext2D) {
+    this.drawRect(ctx, this.globalPosition, cardRect, "#d1d1d1ff");
   }
   /**
    * Finds the first card that meets the condition, and moves it to the destination TupleNode based on the result of running indexFunc
@@ -88,7 +90,7 @@ export class TupleNode extends CanvasItem {
    * @param reverseChildren
    */
 
-  updateCardPositions(): void {
+  protected updateCardPositions(): void {
     const cardNodes = this.getCardNodes();
     const cardSpacing = tupleNodeTypeOffsets[this.tupleNodeType];
     for (let index = 0; index < cardNodes.length; index++) {
