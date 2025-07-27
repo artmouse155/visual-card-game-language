@@ -79,7 +79,7 @@ export class TupleNode extends CanvasItem {
   }
 
   protected _draw(ctx: CanvasRenderingContext2D) {
-    this.drawRect(ctx, this.globalPosition, cardRect, "#d1d1d1ff");
+    this.drawRect(ctx, this.globalPosition, cardRect, "#1818187e");
   }
   /**
    * Finds the first card that meets the condition, and moves it to the destination TupleNode based on the result of running indexFunc

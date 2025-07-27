@@ -3,13 +3,23 @@ import { CanvasItem, Rect } from "./canvas_item.js";
 import { Label } from "./label.js";
 
 export class Button extends CanvasItem {
-  label: Label;
+  private label: Label;
 
   private _click_callable: CallableFunction = () => {
     console.log("No callable set.");
   };
 
-  disabled: boolean = false;
+  _disabled: boolean = false;
+
+  set disabled(value: boolean) {
+    this._disabled = value;
+    this.label.fontColor = this._disabled ? "#282828ff" : "#000000ff";
+  }
+
+  get disabled() {
+    return this._disabled;
+  }
+
   set text(value: string) {
     if (this.text != value) {
       this.scheduleResize = true;
@@ -24,9 +34,9 @@ export class Button extends CanvasItem {
   protected scheduleResize = false;
 
   constructor(position: Vector2, text: string, disabled?: boolean) {
-    super(position, new Vector2(150, 60));
-    this.label = new Label(Vector2.ZERO, text);
-    this.addChild(new Label(Vector2.ZERO, text));
+    super(position, Vector2.ZERO);
+    this.label = new Label(Vector2.ZERO, text, 20);
+    this.addChild(this.label);
     if (disabled) {
       this.disabled = disabled;
     }
@@ -46,16 +56,16 @@ export class Button extends CanvasItem {
     const rect: Rect = {
       size: this.size,
       padding_x: new Vector2(15, 15),
-      padding_y: new Vector2(15, 15),
-      border_width: 5,
-      corner_radius: 5,
+      padding_y: new Vector2(5, 5),
+      border_width: 0,
+      corner_radius: 2,
     };
     this.drawRect(
       ctx,
       this.globalPosition,
       rect,
-      this.disabled ? "#a3a3a3ff" : "#204da1ff",
-      this.disabled ? "#797979ff" : "#1a3d7fff"
+      this.disabled ? "#2626264d" : "#f0f0f0ff",
+      this.disabled ? "#282828ff" : "#000000ff"
     );
     // ctx.fillRect(
     //   this.globalPosition.x,

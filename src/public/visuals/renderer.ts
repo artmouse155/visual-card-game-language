@@ -85,8 +85,7 @@ export class Renderer extends CanvasItem {
     // ctx.shadowOffsetX = 2;
     // ctx.shadowOffsetY = 2;
 
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = "black";
+    this.loadbg();
 
     this._propagate_draw(ctx);
   }

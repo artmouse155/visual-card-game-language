@@ -4,6 +4,7 @@ import { CanvasItem } from "./canvas_item.js";
 export class Label extends CanvasItem {
   private _text: string;
   fontSize: number = 20;
+  fontColor: string = "#000000ff";
 
   set text(value: string) {
     if (this._text != value) {
@@ -18,7 +19,12 @@ export class Label extends CanvasItem {
 
   private scheduleResize = false;
 
-  constructor(position: Vector2, text: string, fontSize?: number) {
+  constructor(
+    position: Vector2,
+    text: string,
+    fontSize?: number,
+    fontColor?: string
+  ) {
     super(position, new Vector2(100, 100));
     this.text = text;
     this._text = text;
@@ -26,10 +32,13 @@ export class Label extends CanvasItem {
     if (fontSize) {
       this.fontSize = fontSize;
     }
+    if (fontColor) {
+      this.fontColor = fontColor;
+    }
   }
 
   protected _draw(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "black";
+    ctx.fillStyle = this.fontColor;
     ctx.font = `${this.fontSize}px Verdana`;
     ctx.textBaseline = "ideographic";
 
