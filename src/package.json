@@ -24,5 +24,9 @@
     "build": "tsc && npm run build:cp-public",
     "build:cp-public": "cp -r ./public/** ./dist",
     "type": "tsc --noEmit"
+  },
+  "dependencies": {
+    "npm": "^11.5.2",
+    "prismjs": "^1.30.0"
   }
 }
