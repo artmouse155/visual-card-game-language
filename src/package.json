@@ -27,6 +27,6 @@
   },
   "dependencies": {
     "npm": "^11.5.2",
-    "prismjs": "^1.30.0"
+    "prism-code-editor": "^4.1.0"
   }
 }

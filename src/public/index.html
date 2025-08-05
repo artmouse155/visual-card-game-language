@@ -3,17 +3,36 @@
 <html>
   <head>
     <script type="module" src="./index.js"></script>
+    <link rel="stylesheet" href="vcgl.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/themes/prism-okaidia.min.css"
+    />
     <meta charset="UTF-8" />
     <title>Test</title>
   </head>
   <body>
     <h1>Welcome to VCGL!</h1>
-    <canvas
-      id="VGCLCanvas"
-      width="800"
-      height="600"
-      style="border: 1px solid #000000"
-    ></canvas>
+    <div class="editor">
+      <div class="editor-panel">
+        <div class="code-editor-container">
+          <pre
+            contenteditable
+          ><code class="language-html" id="code-editor">THIS IS SOME HTML!!!!</code></pre>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/prism.min.js"></script>
+        </div>
+      </div>
+      <div class="editor-panel">
+        <div class="canvas-container">
+          <canvas
+            id="VGCLCanvas"
+            width="800"
+            height="600"
+            style="border: 1px solid #000000"
+          ></canvas>
+        </div>
+      </div>
+    </div>
     <p>👋</p>
   </body>
 </html>
