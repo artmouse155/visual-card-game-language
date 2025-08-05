@@ -3,9 +3,9 @@ import {
   minimalEditor,
   basicEditor,
   readonlyEditor,
-} from "prism-code-editor/setups";
+} from "../node_modules/prism-code-editor/dist/setups/index.js";
 // Importing Prism grammars
-import "prism-code-editor/prism/languages/markup";
+import "../node_modules/prism-code-editor/dist/languages/xml.js";
 
 const game = new Blackjack();
 game.play();
