@@ -42,6 +42,11 @@ export class Tuple extends CanvasItem {
     return node;
   }
 
+  protected reorderChild(child: VCGLNode, destinationIndex: number): void {
+    super.reorderChild(child, destinationIndex);
+    this.updateCardPositions();
+  }
+
   protected updateCardPositions(): void {
     this.getCards().map((card) => {
       card.position = Vector2.ZERO;
@@ -80,6 +85,11 @@ export class Tuple extends CanvasItem {
     const cards = this.getCards();
     return new TupleRange(this, cards.length - count, cards.length);
     // return cards.slice(cards.length - count,cards.length);
+  }
+
+  public fromBottom(count: number): TupleRange {
+    const cards = this.getCards();
+    return new TupleRange(this, 0, count);
   }
   //#endregion
 
@@ -222,7 +232,7 @@ export class TupleTile extends Tuple {
   }
 
   protected updateCardPositions(): void {
-    const cardNodes = this.getCards();
+    const cards = this.getCards();
     let initialOffset = Vector2.ZERO;
     let cardSpacing = Vector2.ZERO;
     switch (this.displayMode) {
@@ -239,20 +249,20 @@ export class TupleTile extends Tuple {
         cardSpacing = new Vector2(0, STAGGER_DISTANCE.y);
         initialOffset = new Vector2(
           0,
-          ((cardNodes.length - 1) * STAGGER_DISTANCE.y) / 2
+          ((cards.length - 1) * STAGGER_DISTANCE.y) / -2.0
         );
         break;
       case "centered_staggered_right":
         cardSpacing = new Vector2(STAGGER_DISTANCE.x, 0);
         initialOffset = new Vector2(
-          ((cardNodes.length - 1) * STAGGER_DISTANCE.x) / 2,
+          ((cards.length - 1) * STAGGER_DISTANCE.x) / -2.0,
           0
         );
         break;
     }
 
-    for (let index = 0; index < cardNodes.length; index++) {
-      cardNodes[index].position = initialOffset.plus(cardSpacing.times(index));
+    for (let i = 0; i < cards.length; i++) {
+      cards[i].position = initialOffset.plus(cardSpacing.times(i));
     }
   }
 }

@@ -76,7 +76,7 @@ export const SuitEmojis: Record<Suit, string> = {
   Club: "♣️",
 };
 
-export const STAGGER_DISTANCE = new Vector2(36, 20);
+export const STAGGER_DISTANCE = new Vector2(35, 30);
 export const TILE_SIZE = new Vector2(90, 130);
 export const CARD_SIZE = new Vector2(80, 120);
 

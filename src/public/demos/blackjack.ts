@@ -47,7 +47,11 @@ export class Blackjack extends Game {
       const drawPile = this.addTupleNode(300, 250, "flush", deck.getCards());
 
       const dealerHand = this.addTupleNode(300, 125, "staggered_right");
-      const playerHand = this.addTupleNode(300, 425, "staggered_right");
+      const playerHand = this.addTupleNode(
+        300,
+        425,
+        "centered_staggered_right"
+      );
 
       let dealerScore = 0;
       let playerScore = 0;
@@ -57,6 +61,8 @@ export class Blackjack extends Game {
 
       drawPile.shuffle();
       drawPile.flip();
+
+      const blackjackPivotScore = 200;
 
       const blackjackCalcScore = (cards: Card[]): number => {
         let score = 0;
@@ -74,7 +80,7 @@ export class Blackjack extends Game {
           }
         }
         for (let index = 0; index < aces; index++) {
-          if (score >= 21) {
+          if (score >= blackjackPivotScore) {
             break;
           }
           score += 10;
@@ -107,13 +113,13 @@ export class Blackjack extends Game {
 
       flipButton.bindClick(() => {
         console.log("Hit button clicked");
-        drawPile.reveal(playerHand, 1);
+        drawPile.fromBottom(1).move(playerHand, 0, true, true);
         playerScore = blackjackCalcScore(playerHand.getCards());
         playerScoreLabel.text = `Player Score: ${playerScore}`;
-        if (playerScore >= 21) {
+        if (playerScore >= blackjackPivotScore) {
           flipButton.disabled = true;
           endTurnButton.disabled = true;
-          if (playerScore == 21) {
+          if (playerScore == blackjackPivotScore) {
             this.win();
           } else {
             this.lose();
