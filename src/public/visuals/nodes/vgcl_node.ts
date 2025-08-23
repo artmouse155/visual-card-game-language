@@ -4,6 +4,15 @@ export class VCGLNode {
   protected inTree: boolean = false;
   protected readyCalled: boolean = false;
 
+  /**
+   *
+   * @param func The function to propagate
+   * @param success No idea what this does.
+   * @param limitable Can this propogation be limited? For example, when a node is clicked, nodes underneath it don't get the propagation
+   * @param reverse Run through in a reverse order
+   * @param conditionFunc The condition function for whether a node should have the function called on it
+   * @returns
+   */
   protected propagate_to_children<Type extends VCGLNode, Return>(
     func: (t: Type) => Return,
     success: Return,

@@ -11,9 +11,6 @@ export class Game {
   constructor() {}
 
   play() {
-    if (this.renderer) {
-      // this.renderer.queue_free();
-    }
     this.renderer = new Renderer();
   }
 

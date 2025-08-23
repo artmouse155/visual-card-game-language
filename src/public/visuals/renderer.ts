@@ -5,15 +5,15 @@ import {
 } from "../logic/constants.js";
 import { CanvasItem } from "./nodes/canvas_item.js";
 import { Grid } from "./nodes/grid.js";
+import { Sprite } from "./nodes/sprite.js";
 import { VCGLNode } from "./nodes/vgcl_node.js";
 import { Vector2 } from "./utlis.js";
 
-const BG_IMAGE = "visuals/images/bg.png";
+const BG_IMAGE_PATH = "visuals/images/bg.png";
 
 export class Renderer extends CanvasItem {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
-  bgimage: HTMLImageElement = new Image();
 
   bgRendered: boolean = false;
 
@@ -34,6 +34,8 @@ export class Renderer extends CanvasItem {
       this._propagate_process(1 / FPS);
       this.render();
     }, 1000 / FPS);
+
+    this.addChild(new Sprite(Vector2.ZERO, BG_IMAGE_PATH));
 
     this.canvas.addEventListener("mousemove", (e) => {
       const newMousePos = new Vector2(e.offsetX, e.offsetY);
@@ -70,19 +72,6 @@ export class Renderer extends CanvasItem {
     );
   }
 
-  private loadbg() {
-    if (this.bgRendered) {
-      this.ctx.drawImage(this.bgimage, 0, 0);
-    } else {
-      this.bgimage.addEventListener("load", () => {
-        this.ctx.drawImage(this.bgimage, 0, 0);
-        this.bgRendered = true;
-      });
-
-      this.bgimage.src = BG_IMAGE;
-    }
-  }
-
   public addChild<Type extends VCGLNode>(node: Type): Type {
     return super.addChild(node);
   }
@@ -91,13 +80,6 @@ export class Renderer extends CanvasItem {
     const ctx = this.ctx;
 
     ctx.clearRect(0, 0, CANVAS_SIZE.x, CANVAS_SIZE.y);
-
-    // ctx.shadowColor = "black";
-    // ctx.shadowBlur = 8;
-    // ctx.shadowOffsetX = 2;
-    // ctx.shadowOffsetY = 2;
-
-    this.loadbg();
 
     this._propagate_draw(ctx);
   }

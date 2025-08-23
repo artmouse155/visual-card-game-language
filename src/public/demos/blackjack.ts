@@ -18,6 +18,8 @@ export class Blackjack extends Game {
     */
 
   play() {
+    super.play(); // ALERT We have to do this so that the base renderer gets created.
+
     // Create Blackjack Order
     const blackjackOrder: RankOrder = {
       A: 1,
