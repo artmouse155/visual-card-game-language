@@ -8,7 +8,7 @@ import type {
 import { Orders, SuitOrders } from "../logic/constants.js"; // ts extension gone
 import { Deck } from "../logic/deck.js"; // ts extension gone
 import { Game } from "../logic/game.js"; // ts extension gone
-import { Card, SuitCard } from "../visuals/nodes/card_node.js";
+import { Card, SuitCard } from "../visuals/nodes/card.js";
 
 export class Blackjack extends Game {
   /*

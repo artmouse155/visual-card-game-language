@@ -8,7 +8,7 @@ import {
 import { Vector2 } from "../utlis.js";
 import { CanvasItem } from "./canvas_item.js";
 import { Label } from "./label.js";
-import { cardRect } from "./tuple_node.js";
+import { cardRect } from "./tuple.js";
 
 export class Card extends CanvasItem {
   faceup = true;

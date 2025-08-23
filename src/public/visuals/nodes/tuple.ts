@@ -1,7 +1,7 @@
 import { STAGGER_DISTANCE } from "../../logic/constants.js";
 import { Vector2 } from "../utlis.js";
 import { CanvasItem, Rect } from "./canvas_item.js";
-import { Card } from "./card_node.js";
+import { Card } from "./card.js";
 import { VCGLNode } from "./vgcl_node.js";
 
 export type TupleTileDisplayMode =

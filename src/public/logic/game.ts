@@ -1,12 +1,9 @@
 import { Label } from "../visuals/nodes/label.js"; // ts extension gone
 import { Renderer } from "../visuals/renderer.js";
-import {
-  TupleTile,
-  TupleTileDisplayMode,
-} from "../visuals/nodes/tuple_node.js";
+import { TupleTile, TupleTileDisplayMode } from "../visuals/nodes/tuple.js";
 import { Vector2 } from "../visuals/utlis.js";
 import { Button } from "../visuals/nodes/button.js";
-import { Card } from "../visuals/nodes/card_node.js";
+import { Card } from "../visuals/nodes/card.js";
 
 export class Game {
   renderer: Renderer = new Renderer();
