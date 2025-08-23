@@ -1,4 +1,9 @@
-import { CARD_RECT, STAGGER_DISTANCE } from "../../logic/constants.js";
+import {
+  CARD_RECT,
+  CARD_SIZE,
+  STAGGER_DISTANCE,
+  TILE_SIZE,
+} from "../../logic/constants.js";
 import { Vector2 } from "../utlis.js";
 import { CanvasItem } from "./canvas_item.js";
 import { Card } from "./card.js";
@@ -11,7 +16,12 @@ export class Tuple extends CanvasItem {
   }
 
   constructor(position: Vector2, cards?: Card[]) {
-    super(position, CARD_RECT.size);
+    super(
+      new Vector2(position.x * TILE_SIZE.x, position.y * TILE_SIZE.y).plus(
+        TILE_SIZE.minus(CARD_SIZE).times(0.5)
+      ),
+      CARD_RECT.size
+    );
     if (cards) {
       for (const card of cards) {
         this.addChild(card);
@@ -93,6 +103,7 @@ export class Tuple extends CanvasItem {
   }
   //#endregion
 
+  //#region Old Code
   // Too complicated for now.
   // moveCard(
   //   conditionFunc: (c: Card, index: number) => boolean,
@@ -153,10 +164,6 @@ export class Tuple extends CanvasItem {
   //   }
   // }
 
-  reveal(destination: Tuple, count: number = 1) {
-    this.toTop(count).move(destination, destination.length, true, true);
-  }
-
   // draw(
   //   destination: TupleTile,
   //   count: number = 1,
@@ -174,6 +181,11 @@ export class Tuple extends CanvasItem {
   //     );
   //   }
   // }
+  //#endregion
+
+  reveal(destination: Tuple, count: number = 1) {
+    this.toTop(count).move(destination, destination.length, true, true);
+  }
 
   shuffle(): void {
     const randInRange = (min: number, max: number): number => {

@@ -19,12 +19,14 @@ export class Grid extends CanvasItem {
   }
 
   protected _draw(ctx: CanvasRenderingContext2D): void {
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#000000ac";
+
     for (let i = 0; i < this.verticalLineCount; i++) {
       ctx.beginPath();
       const startX = this.position.x + i * this.cellSize.x;
       ctx.moveTo(startX, 0);
       ctx.lineTo(startX, this.lineLength);
-      ctx.strokeStyle = "#ee0000ac";
       ctx.stroke();
     }
 
@@ -33,7 +35,6 @@ export class Grid extends CanvasItem {
       const startY = this.position.y + i * this.cellSize.y;
       ctx.moveTo(0, startY);
       ctx.lineTo(this.lineLength, startY);
-      ctx.strokeStyle = "#000000ac";
       ctx.stroke();
     }
   }
