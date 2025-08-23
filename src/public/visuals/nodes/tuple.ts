@@ -6,6 +6,10 @@ import { TupleRange } from "./tuple_range.js";
 import { VCGLNode } from "./vgcl_node.js";
 
 export class Tuple extends CanvasItem {
+  public get length(): number {
+    return this.getCards().length;
+  }
+
   constructor(position: Vector2, cards?: Card[]) {
     super(position, CARD_RECT.size);
     if (cards) {
@@ -17,7 +21,7 @@ export class Tuple extends CanvasItem {
 
   public getCards(): Card[] {
     let out: Card[] = [];
-    for (const child of this.get_children()) {
+    for (const child of this.getChildren()) {
       const cardChild = child as Card;
       if (cardChild) {
         out.push(cardChild);
@@ -38,14 +42,23 @@ export class Tuple extends CanvasItem {
     return node;
   }
 
-  protected getSize(): number {
-    return this.getCards().length;
-  }
-
   protected updateCardPositions(): void {
     this.getCards().map((card) => {
       card.position = Vector2.ZERO;
     });
+  }
+
+  public popCard(index: number): Card {
+    return this.removeChild(
+      this.findChildIndex(this.getCards()[index])
+    ) as Card;
+  }
+
+  public insertCard(card: Card, index: number) {
+    const childIndex =
+      index > 0 ? this.findChildIndex(this.getCards()[index - 1]) + 1 : 0;
+    this.addChild(card);
+    this.reorderChild(card, childIndex);
   }
 
   //#region indexing
@@ -130,7 +143,9 @@ export class Tuple extends CanvasItem {
   //   }
   // }
 
-  reveal(destination: Tuple, count: number = 1) {}
+  reveal(destination: Tuple, count: number = 1) {
+    this.toTop(count).move(destination, destination.length, true, true);
+  }
 
   // draw(
   //   destination: TupleTile,

@@ -33,7 +33,7 @@ export class CanvasItem extends VCGLNode {
   }
 
   protected updateChildrenGlobalPosition() {
-    for (const child of this.get_children()) {
+    for (const child of this.getChildren()) {
       (child as CanvasItem)._parentGlobalPosition = this.globalPosition;
       (child as CanvasItem).updateChildrenGlobalPosition();
     }

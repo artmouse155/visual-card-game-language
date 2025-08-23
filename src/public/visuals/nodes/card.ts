@@ -58,6 +58,10 @@ export class Card extends CanvasItem {
   //   return true;
   // }
 
+  public toString(): string {
+    return this.getCardText();
+  }
+
   getCardText(): string {
     return "";
   }

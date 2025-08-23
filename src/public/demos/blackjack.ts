@@ -88,7 +88,18 @@ export class Blackjack extends Game {
       };
 
       const flipButton = this.addButton(25, 400, "Hit", true);
+      const printEverythingButton = this.addButton(
+        25,
+        450,
+        "Print Everything",
+        true
+      );
       const endTurnButton = this.addButton(25, 500, "End Turn", true);
+
+      printEverythingButton.bindClick(() => {
+        console.log(this.renderer.toString());
+      });
+      printEverythingButton.disabled = false;
 
       // Start player turn
       flipButton.disabled = false;
@@ -111,7 +122,5 @@ export class Blackjack extends Game {
       });
       endTurnButton.bindClick(() => dealerTurn);
     });
-
-    console.log(this.renderer.toString());
   }
 }

@@ -13,7 +13,7 @@ export class VCGLNode {
       return true;
     }
   ): Return {
-    const children = [...this.get_children()];
+    const children = [...this.getChildren()];
     for (const child of reverse ? children.reverse() : children) {
       const typedChild = child as Type;
       if (conditionFunc(typedChild)) {
@@ -72,12 +72,23 @@ export class VCGLNode {
     return node;
   }
 
-  protected get_children(): Array<VCGLNode> {
+  protected getChildren(): Array<VCGLNode> {
     return this.children;
   }
 
-  protected get_parent(): VCGLNode | null {
+  protected getParent(): VCGLNode | null {
     return this.parent;
+  }
+
+  protected findChildIndex(child: VCGLNode): number {
+    const children = this.getChildren();
+    for (let i = 0; i < children.length; i++) {
+      const foundChild = children[i];
+      if (foundChild === child) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   protected reparent(
@@ -86,17 +97,8 @@ export class VCGLNode {
     destinationIndex?: number
   ): void {
     // Step 1: Find index of the child in the current parent
-    let index = 0;
-    let found = false;
-    const children = this.get_children();
-    for (index = 0; index < children.length; index++) {
-      const foundChild = children[index];
-      if (foundChild === child) {
-        found = true;
-        break;
-      }
-    }
-    if (found) {
+    const index = this.findChildIndex(child);
+    if (index !== -1) {
       this.removeChild(index);
       newParent.addChild(child);
       if (destinationIndex) {
@@ -118,17 +120,8 @@ export class VCGLNode {
 
   protected reorderChild(child: VCGLNode, destinationIndex: number): void {
     // Step 1: Find index of the child in the current parent
-    let index = 0;
-    let found = false;
-    const children = this.get_children();
-    for (index = 0; index < children.length; index++) {
-      const foundChild = children[index];
-      if (foundChild === child) {
-        found = true;
-        break;
-      }
-    }
-    if (found) {
+    const index = this.findChildIndex(child);
+    if (index !== -1) {
       this.removeChild(index);
       this.children.splice(destinationIndex, 0, child);
     } else {
@@ -142,8 +135,16 @@ export class VCGLNode {
   }
 
   public toString(): string {
-    return `Type: ${this.constructor.name} Parent: ${
-      this.parent?.constructor.name
-    } Children: [${this.children.map((child) => child.toString()).join(", ")}]`;
+    //   return `{type: "${this.constructor.name}",\t
+    //   parent: "${
+    //     this.parent?.constructor.name
+    //     }",\t
+    //   children: [${this.children
+    //     .map((child) => child.toString())
+    //     .join(", ")}]}`;
+    // }
+
+    return `{type: "${this.constructor.name}",\t
+    children: [${this.children.map((child) => child.toString()).join(", ")}]}`;
   }
 }
