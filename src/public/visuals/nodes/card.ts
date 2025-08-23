@@ -1,5 +1,6 @@
 import {
   CARD_SIZE,
+  CARD_RECT,
   Order,
   Rank,
   Suit,
@@ -8,7 +9,6 @@ import {
 import { Vector2 } from "../utlis.js";
 import { CanvasItem } from "./canvas_item.js";
 import { Label } from "./label.js";
-import { cardRect } from "./tuple.js";
 
 export class Card extends CanvasItem {
   faceup = true;
@@ -32,7 +32,7 @@ export class Card extends CanvasItem {
     this.drawRect(
       ctx,
       this.globalPosition,
-      cardRect,
+      CARD_RECT,
       this.faceup ? "#e2e2e2ff" : "#b72121ff",
       "#000000ff"
     );

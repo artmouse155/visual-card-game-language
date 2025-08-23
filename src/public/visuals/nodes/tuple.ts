@@ -1,33 +1,19 @@
-import { STAGGER_DISTANCE } from "../../logic/constants.js";
+import { CARD_RECT, STAGGER_DISTANCE } from "../../logic/constants.js";
 import { Vector2 } from "../utlis.js";
-import { CanvasItem, Rect } from "./canvas_item.js";
+import { CanvasItem } from "./canvas_item.js";
 import { Card } from "./card.js";
+import { TupleRange } from "./tuple_range.js";
 import { VCGLNode } from "./vgcl_node.js";
 
-export type TupleTileDisplayMode =
-  | "flush"
-  | "staggered"
-  | "staggered_right"
-  | "centered_staggered"
-  | "centered_staggered_right";
-
-export const cardRect: Rect = {
-  size: new Vector2(80, 120),
-  padding_x: Vector2.ZERO,
-  padding_y: Vector2.ZERO,
-  border_width: 2,
-  corner_radius: 5,
-};
-
-// const tupleNodeTypeOffsets: Record<TupleNodeType, Vector2> = {
-//   drawpile: new Vector2(0, 0),
-//   hand: new Vector2(40, 0),
-//   staggered: new Vector2(0, 10),
-//   staggered_right: new Vector2(20, 0),
-// };
-
-export class TupleTile extends CanvasItem {
-  protected displayMode: TupleTileDisplayMode = "flush";
+export class Tuple extends CanvasItem {
+  constructor(position: Vector2, cards?: Card[]) {
+    super(position, CARD_RECT.size);
+    if (cards) {
+      for (const card of cards) {
+        this.addChild(card);
+      }
+    }
+  }
 
   public getCards(): Card[] {
     let out: Card[] = [];
@@ -38,23 +24,6 @@ export class TupleTile extends CanvasItem {
       }
     }
     return out;
-  }
-
-  constructor(
-    position: Vector2,
-    tupleNodeType?: TupleTileDisplayMode,
-    cards?: Card[]
-  ) {
-    super(position, cardRect.size);
-    if (cards) {
-      for (const card of cards) {
-        this.addChild(card);
-      }
-    }
-    if (tupleNodeType) {
-      this.displayMode = tupleNodeType;
-    }
-    this.updateCardPositions();
   }
 
   protected addChild<Type extends VCGLNode>(node: Type): Type {
@@ -73,17 +42,169 @@ export class TupleTile extends CanvasItem {
     return this.getCards().length;
   }
 
-  protected _draw(ctx: CanvasRenderingContext2D) {
-    this.drawRect(ctx, this.globalPosition, cardRect, "#1818187e");
+  protected updateCardPositions(): void {
+    this.getCards().map((card) => {
+      card.position = Vector2.ZERO;
+    });
   }
-  /**
-   * Finds the first card that meets the condition, and moves it to the destination TupleNode based on the result of running indexFunc
-   * @param conditionFunc
-   * @param destination
-   * @param indexFunc
-   * @param flipCard
-   * @param reverseChildren
-   */
+
+  //#region indexing
+
+  public at(index: number): Card {
+    return this.getCards()[index];
+  }
+
+  public top(): Card {
+    const cards = this.getCards();
+    return cards[cards.length - 1];
+  }
+
+  public bottom(): Card {
+    return this.getCards()[0];
+  }
+
+  public toTop(count: number): TupleRange {
+    const cards = this.getCards();
+    return new TupleRange(this, cards.length - count, cards.length);
+    // return cards.slice(cards.length - count,cards.length);
+  }
+  //#endregion
+
+  // Too complicated for now.
+  // moveCard(
+  //   conditionFunc: (c: Card, index: number) => boolean,
+  //   destination: TupleTile,
+  //   indexFunc?: (c: Card, index: number, cards: Card[]) => number,
+  //   flipCard?: boolean,
+  //   reverseChildren?: boolean
+  // ): void {
+  //   const cards = this.getCards();
+  //   if (reverseChildren) {
+  //     cards.reverse();
+  //   }
+  //   let index = 0;
+  //   let found = false;
+  //   for (index = 0; index < cards.length; index++) {
+  //     const card = cards[index];
+  //     if (conditionFunc(card, index)) {
+  //       found = true;
+  //       break;
+  //     }
+  //   }
+  //   if (found) {
+  //     const cardNode = cards[index];
+  //     if (indexFunc) {
+  //       this.reparent(
+  //         cardNode,
+  //         destination,
+  //         indexFunc(cardNode, index, destination.getCards())
+  //       );
+  //     } else {
+  //       this.reparent(cardNode, destination);
+  //     }
+  //     if (flipCard) {
+  //       cardNode.flip();
+  //     }
+  //   } else {
+  //     console.error(
+  //       `No card found in tupleNode ${this} matching condition ${conditionFunc}`
+  //     );
+  //   }
+  // }
+
+  // reveal(
+  //   destination: TupleTile,
+  //   count: number = 1,
+  //   reverseChildren?: boolean
+  // ): void {
+  //   for (let index = 0; index < count; index++) {
+  //     const thisPileSize = this.getSize();
+  //     this.moveCard(
+  //       (c: Card, index: number) => {
+  //         return index == thisPileSize - 1;
+  //       },
+  //       destination,
+  //       undefined,
+  //       true
+  //     );
+  //   }
+  // }
+
+  reveal(destination: Tuple, count: number = 1) {}
+
+  // draw(
+  //   destination: TupleTile,
+  //   count: number = 1,
+  //   reverseChildren?: boolean
+  // ): void {
+  //   for (let index = 0; index < count; index++) {
+  //     const thisPileSize = this.getSize();
+  //     this.moveCard(
+  //       (c: Card, index: number) => {
+  //         return index == thisPileSize - 1;
+  //       },
+  //       destination,
+  //       undefined,
+  //       false
+  //     );
+  //   }
+  // }
+
+  shuffle(): void {
+    const randInRange = (min: number, max: number): number => {
+      return Math.floor(Math.random() * (max - min)) + min;
+    };
+
+    let temp: TupleTile = new TupleTile(Vector2.ZERO);
+    while (this.getCards().length > 0) {
+      const index = randInRange(0, this.getCards().length);
+      temp.addChild(this.removeChild(index));
+    }
+    while (temp.getCards().length > 0) {
+      this.addChild(temp.removeChild(0));
+    }
+  }
+
+  flip(): void {
+    this.reverse();
+    for (const cardNode of this.getCards()) {
+      cardNode.flip();
+    }
+  }
+
+  reverse(): void {
+    const cardNodes = this.getCards();
+    for (const cardNode of this.getCards()) {
+      this.reorderChild(cardNode, 0);
+    }
+  }
+}
+
+export type TupleTileDisplayMode =
+  | "flush"
+  | "staggered"
+  | "staggered_right"
+  | "centered_staggered"
+  | "centered_staggered_right";
+
+export class TupleTile extends Tuple {
+  protected displayMode: TupleTileDisplayMode = "flush";
+
+  constructor(
+    position: Vector2,
+    tupleNodeType?: TupleTileDisplayMode,
+    cards?: Card[]
+  ) {
+    super(position, cards);
+    if (tupleNodeType) {
+      this.displayMode = tupleNodeType;
+    }
+    this.updateCardPositions();
+  }
+
+  protected _draw(ctx: CanvasRenderingContext2D) {
+    this.drawRect(ctx, this.globalPosition, CARD_RECT, "#1818187e");
+  }
 
   protected updateCardPositions(): void {
     const cardNodes = this.getCards();
@@ -117,112 +238,6 @@ export class TupleTile extends CanvasItem {
 
     for (let index = 0; index < cardNodes.length; index++) {
       cardNodes[index].position = initialOffset.plus(cardSpacing.times(index));
-    }
-  }
-
-  moveCard(
-    conditionFunc: (c: Card, index: number) => boolean,
-    destination: TupleTile,
-    indexFunc?: (c: Card, index: number, cards: Card[]) => number,
-    flipCard?: boolean,
-    reverseChildren?: boolean
-  ): void {
-    const cards = this.getCards();
-    if (reverseChildren) {
-      cards.reverse();
-    }
-    let index = 0;
-    let found = false;
-    for (index = 0; index < cards.length; index++) {
-      const card = cards[index];
-      if (conditionFunc(card, index)) {
-        found = true;
-        break;
-      }
-    }
-    if (found) {
-      const cardNode = cards[index];
-      if (indexFunc) {
-        this.reparent(
-          cardNode,
-          destination,
-          indexFunc(cardNode, index, destination.getCards())
-        );
-      } else {
-        this.reparent(cardNode, destination);
-      }
-      if (flipCard) {
-        cardNode.flip();
-      }
-    } else {
-      console.error(
-        `No card found in tupleNode ${this} matching condition ${conditionFunc}`
-      );
-    }
-  }
-
-  reveal(
-    destination: TupleTile,
-    count: number = 1,
-    reverseChildren?: boolean
-  ): void {
-    for (let index = 0; index < count; index++) {
-      const thisPileSize = this.getSize();
-      this.moveCard(
-        (c: Card, index: number) => {
-          return index == thisPileSize - 1;
-        },
-        destination,
-        undefined,
-        true
-      );
-    }
-  }
-
-  draw(
-    destination: TupleTile,
-    count: number = 1,
-    reverseChildren?: boolean
-  ): void {
-    for (let index = 0; index < count; index++) {
-      const thisPileSize = this.getSize();
-      this.moveCard(
-        (c: Card, index: number) => {
-          return index == thisPileSize - 1;
-        },
-        destination,
-        undefined,
-        false
-      );
-    }
-  }
-
-  shuffle(): void {
-    const randInRange = (min: number, max: number): number => {
-      return Math.floor(Math.random() * (max - min)) + min;
-    };
-
-    let temp: TupleTile = new TupleTile(Vector2.ZERO);
-    while (this.getCards().length > 0) {
-      const index = randInRange(0, this.getCards().length);
-      temp.addChild(this.removeChild(index));
-    }
-    while (temp.getCards().length > 0) {
-      this.addChild(temp.removeChild(0));
-    }
-  }
-
-  flip(): void {
-    this.reverse();
-    for (const cardNode of this.getCards()) {
-      cardNode.flip();
-    }
-  }
-
-  reverse(): void {
-    const cardNodes = this.getCards();
-    for (const cardNode of this.getCards()) {
-      this.reorderChild(cardNode, 0);
     }
   }
 }

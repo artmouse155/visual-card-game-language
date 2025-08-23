@@ -1,3 +1,4 @@
+import { Rect } from "../visuals/nodes/canvas_item.js";
 import { Vector2 } from "../visuals/utlis.js";
 
 export type Suit = "Spade" | "Heart" | "Diamond" | "Club";
@@ -78,3 +79,11 @@ export const SuitEmojis: Record<Suit, string> = {
 export const STAGGER_DISTANCE = new Vector2(10, 10);
 export const TILE_SIZE = new Vector2(90, 130);
 export const CARD_SIZE = new Vector2(80, 120);
+
+export const CARD_RECT: Rect = {
+  size: CARD_SIZE,
+  padding_x: Vector2.ZERO,
+  padding_y: Vector2.ZERO,
+  border_width: 2,
+  corner_radius: 5,
+};
