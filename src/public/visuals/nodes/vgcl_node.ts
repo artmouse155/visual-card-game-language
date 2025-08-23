@@ -141,9 +141,9 @@ export class VCGLNode {
     }
   }
 
-  protected toString(): string {
+  public toString(): string {
     return `Type: ${this.constructor.name} Parent: ${
-      this.parent
+      this.parent?.constructor.name
     } Children: [${this.children.map((child) => child.toString()).join(", ")}]`;
   }
 }

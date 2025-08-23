@@ -111,5 +111,7 @@ export class Blackjack extends Game {
       });
       endTurnButton.bindClick(() => dealerTurn);
     });
+
+    console.log(this.renderer.toString());
   }
 }
