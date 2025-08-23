@@ -10,7 +10,7 @@ import { CanvasItem } from "./canvas_item.js";
 import { Label } from "./label.js";
 import { cardRect } from "./tuple_node.js";
 
-export class CardNode extends CanvasItem {
+export class Card extends CanvasItem {
   faceup = true;
   label: Label;
 
@@ -63,7 +63,7 @@ export class CardNode extends CanvasItem {
   }
 }
 
-export class SuitCardNode extends CardNode {
+export class SuitCard extends Card {
   protected order: Order;
   protected suit: Suit;
   protected rank: Rank;
@@ -98,7 +98,7 @@ export class SuitCardNode extends CardNode {
     return this.order.RankOrder[this.rank];
   }
 
-  lessThan(other: SuitCardNode): boolean {
+  lessThan(other: SuitCard): boolean {
     if (this.getRankValue() === other.getRankValue()) {
       return this.getSuitValue() < other.getSuitValue();
     } else {
@@ -107,7 +107,7 @@ export class SuitCardNode extends CardNode {
   }
 }
 
-export class JokerCardNode extends CardNode {
+export class JokerCard extends Card {
   constructor() {
     super();
     this.label.text = this.getCardText();

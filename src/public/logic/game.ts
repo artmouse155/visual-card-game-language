@@ -1,9 +1,12 @@
 import { Label } from "../visuals/nodes/label.js"; // ts extension gone
 import { Renderer } from "../visuals/renderer.js";
-import { TupleNode, TupleNodeType } from "../visuals/nodes/tuple_node.js";
+import {
+  TupleTile,
+  TupleTileDisplayMode,
+} from "../visuals/nodes/tuple_node.js";
 import { Vector2 } from "../visuals/utlis.js";
 import { Button } from "../visuals/nodes/button.js";
-import { CardNode } from "../visuals/nodes/card_node.js";
+import { Card } from "../visuals/nodes/card_node.js";
 
 export class Game {
   renderer: Renderer = new Renderer();
@@ -25,11 +28,11 @@ export class Game {
   addTupleNode(
     x: number,
     y: number,
-    tupleNodeType: TupleNodeType = "flush",
-    tuple?: CardNode[]
-  ): TupleNode {
+    tupleNodeType: TupleTileDisplayMode = "flush",
+    tuple?: Card[]
+  ): TupleTile {
     return this.renderer.addChild(
-      new TupleNode(new Vector2(x, y), tupleNodeType, tuple)
+      new TupleTile(new Vector2(x, y), tupleNodeType, tuple)
     );
   }
 

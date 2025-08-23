@@ -1,10 +1,10 @@
 import { STAGGER_DISTANCE } from "../../logic/constants.js";
 import { Vector2 } from "../utlis.js";
 import { CanvasItem, Rect } from "./canvas_item.js";
-import { CardNode } from "./card_node.js";
+import { Card } from "./card_node.js";
 import { VCGLNode } from "./vgcl_node.js";
 
-export type TupleNodeType =
+export type TupleTileDisplayMode =
   | "flush"
   | "staggered"
   | "staggered_right"
@@ -26,13 +26,13 @@ export const cardRect: Rect = {
 //   staggered_right: new Vector2(20, 0),
 // };
 
-export class TupleNode extends CanvasItem {
-  protected tupleNodeType: TupleNodeType = "flush";
+export class TupleTile extends CanvasItem {
+  protected displayMode: TupleTileDisplayMode = "flush";
 
-  public getCards(): CardNode[] {
-    let out: CardNode[] = [];
+  public getCards(): Card[] {
+    let out: Card[] = [];
     for (const child of this.get_children()) {
-      const cardChild = child as CardNode;
+      const cardChild = child as Card;
       if (cardChild) {
         out.push(cardChild);
       }
@@ -42,8 +42,8 @@ export class TupleNode extends CanvasItem {
 
   constructor(
     position: Vector2,
-    tupleNodeType?: TupleNodeType,
-    cards?: CardNode[]
+    tupleNodeType?: TupleTileDisplayMode,
+    cards?: Card[]
   ) {
     super(position, cardRect.size);
     if (cards) {
@@ -52,7 +52,7 @@ export class TupleNode extends CanvasItem {
       }
     }
     if (tupleNodeType) {
-      this.tupleNodeType = tupleNodeType;
+      this.displayMode = tupleNodeType;
     }
     this.updateCardPositions();
   }
@@ -89,7 +89,7 @@ export class TupleNode extends CanvasItem {
     const cardNodes = this.getCards();
     let initialOffset = Vector2.ZERO;
     let cardSpacing = Vector2.ZERO;
-    switch (this.tupleNodeType) {
+    switch (this.displayMode) {
       case "flush":
         cardSpacing = Vector2.ZERO;
         break;
@@ -121,27 +121,27 @@ export class TupleNode extends CanvasItem {
   }
 
   moveCard(
-    conditionFunc: (c: CardNode, index: number) => boolean,
-    destination: TupleNode,
-    indexFunc?: (c: CardNode, index: number, cards: CardNode[]) => number,
+    conditionFunc: (c: Card, index: number) => boolean,
+    destination: TupleTile,
+    indexFunc?: (c: Card, index: number, cards: Card[]) => number,
     flipCard?: boolean,
     reverseChildren?: boolean
   ): void {
-    const cardNodes = this.getCards();
+    const cards = this.getCards();
     if (reverseChildren) {
-      cardNodes.reverse();
+      cards.reverse();
     }
     let index = 0;
     let found = false;
-    for (index = 0; index < cardNodes.length; index++) {
-      const cardNode = cardNodes[index];
-      if (conditionFunc(cardNode, index)) {
+    for (index = 0; index < cards.length; index++) {
+      const card = cards[index];
+      if (conditionFunc(card, index)) {
         found = true;
         break;
       }
     }
     if (found) {
-      const cardNode = cardNodes[index];
+      const cardNode = cards[index];
       if (indexFunc) {
         this.reparent(
           cardNode,
@@ -162,14 +162,14 @@ export class TupleNode extends CanvasItem {
   }
 
   reveal(
-    destination: TupleNode,
+    destination: TupleTile,
     count: number = 1,
     reverseChildren?: boolean
   ): void {
     for (let index = 0; index < count; index++) {
       const thisPileSize = this.getSize();
       this.moveCard(
-        (c: CardNode, index: number) => {
+        (c: Card, index: number) => {
           return index == thisPileSize - 1;
         },
         destination,
@@ -180,14 +180,14 @@ export class TupleNode extends CanvasItem {
   }
 
   draw(
-    destination: TupleNode,
+    destination: TupleTile,
     count: number = 1,
     reverseChildren?: boolean
   ): void {
     for (let index = 0; index < count; index++) {
       const thisPileSize = this.getSize();
       this.moveCard(
-        (c: CardNode, index: number) => {
+        (c: Card, index: number) => {
           return index == thisPileSize - 1;
         },
         destination,
@@ -202,7 +202,7 @@ export class TupleNode extends CanvasItem {
       return Math.floor(Math.random() * (max - min)) + min;
     };
 
-    let temp: TupleNode = new TupleNode(Vector2.ZERO);
+    let temp: TupleTile = new TupleTile(Vector2.ZERO);
     while (this.getCards().length > 0) {
       const index = randInRange(0, this.getCards().length);
       temp.addChild(this.removeChild(index));
