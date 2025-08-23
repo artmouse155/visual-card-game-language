@@ -79,6 +79,8 @@ export const SuitEmojis: Record<Suit, string> = {
 export const STAGGER_DISTANCE = new Vector2(35, 30);
 export const TILE_SIZE = new Vector2(90, 130);
 export const CARD_SIZE = new Vector2(80, 120);
+export const CANVAS_SIZE = new Vector2(810, 650);
+export const DEFAULT_GRID_NUM_LINES = 10;
 
 export const CARD_RECT: Rect = {
   size: CARD_SIZE,

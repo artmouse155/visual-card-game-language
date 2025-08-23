@@ -1,4 +1,10 @@
+import {
+  CANVAS_SIZE,
+  DEFAULT_GRID_NUM_LINES,
+  TILE_SIZE,
+} from "../logic/constants.js";
 import { CanvasItem } from "./nodes/canvas_item.js";
+import { Grid } from "./nodes/grid.js";
 import { VCGLNode } from "./nodes/vgcl_node.js";
 import { Vector2 } from "./utlis.js";
 
@@ -58,7 +64,13 @@ export class Renderer extends CanvasItem {
     this._ready();
   }
 
-  loadbg() {
+  protected _ready(): void {
+    this.addChild(
+      new Grid(TILE_SIZE, DEFAULT_GRID_NUM_LINES, DEFAULT_GRID_NUM_LINES)
+    );
+  }
+
+  private loadbg() {
     if (this.bgRendered) {
       this.ctx.drawImage(this.bgimage, 0, 0);
     } else {
@@ -71,14 +83,14 @@ export class Renderer extends CanvasItem {
     }
   }
 
-  addChild<Type extends VCGLNode>(node: Type): Type {
+  public addChild<Type extends VCGLNode>(node: Type): Type {
     return super.addChild(node);
   }
 
-  render(): void {
+  protected render(): void {
     const ctx = this.ctx;
 
-    ctx.clearRect(0, 0, 800, 600);
+    ctx.clearRect(0, 0, CANVAS_SIZE.x, CANVAS_SIZE.y);
 
     // ctx.shadowColor = "black";
     // ctx.shadowBlur = 8;
