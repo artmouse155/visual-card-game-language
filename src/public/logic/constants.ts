@@ -84,8 +84,6 @@ export const DEFAULT_GRID_NUM_LINES = 10;
 
 export const CARD_RECT: Rect = {
   size: CARD_SIZE,
-  padding_x: Vector2.ZERO,
-  padding_y: Vector2.ZERO,
   border_width: 2,
   corner_radius: 5,
 };

@@ -3,8 +3,6 @@ import { VCGLNode } from "./vgcl_node.js";
 
 export interface Rect {
   size: Vector2;
-  padding_x: Vector2;
-  padding_y: Vector2;
   border_width: number;
   corner_radius: number;
 }
@@ -82,11 +80,8 @@ export class CanvasItem extends VCGLNode {
     baseColor: string,
     borderColor?: string
   ) {
-    const drawP = new Vector2(p.x - rect.padding_x.x, p.y - rect.padding_y.x);
-    const drawSize = new Vector2(
-      rect.size.x + rect.padding_x.x + rect.padding_x.y,
-      rect.size.y + rect.padding_y.x + rect.padding_y.y
-    );
+    const drawP = p;
+    const drawSize = rect.size;
 
     ctx.beginPath();
     ctx.arc(

@@ -4,6 +4,8 @@ import { Label } from "./label.js";
 
 export class Button extends CanvasItem {
   private label: Label;
+  private padding_x = 15;
+  private padding_y = 5;
 
   private _click_callable: CallableFunction = () => {
     console.log("No callable set.");
@@ -35,7 +37,11 @@ export class Button extends CanvasItem {
 
   constructor(position: Vector2, text: string, disabled?: boolean) {
     super(position, Vector2.ZERO);
-    this.label = new Label(Vector2.ZERO, text, 20);
+    this.label = new Label(
+      new Vector2(this.padding_x, this.padding_y),
+      text,
+      20
+    );
     this.addChild(this.label);
     if (disabled) {
       this.disabled = disabled;
@@ -48,15 +54,15 @@ export class Button extends CanvasItem {
       ctx.font = `${this.label.fontSize}px Verdana`;
       const metrics = ctx.measureText(this.text);
 
-      this.size.x = metrics.width;
+      this.size.x = metrics.width + this.padding_x * 2;
       this.size.y =
-        metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+        metrics.fontBoundingBoxAscent +
+        metrics.fontBoundingBoxDescent +
+        this.padding_y * 2;
       this.scheduleResize = false;
     }
     const rect: Rect = {
       size: this.size,
-      padding_x: new Vector2(15, 15),
-      padding_y: new Vector2(5, 5),
       border_width: 0,
       corner_radius: 2,
     };

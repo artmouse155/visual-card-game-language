@@ -9,6 +9,7 @@ import { Orders, SuitOrders } from "../logic/constants.js"; // ts extension gone
 import { Deck } from "../logic/deck.js"; // ts extension gone
 import { Game } from "../logic/game.js"; // ts extension gone
 import { Card, SuitCard } from "../visuals/nodes/card.js";
+import { Renderer } from "../visuals/renderer.js";
 
 export class Blackjack extends Game {
   /*
@@ -99,7 +100,7 @@ export class Blackjack extends Game {
       const endTurnButton = this.addButton(25, 500, "End Turn", true);
 
       printEverythingButton.bindClick(() => {
-        console.log(this.renderer.toString());
+        console.log((this.renderer as Renderer).toString());
       });
       printEverythingButton.disabled = false;
 

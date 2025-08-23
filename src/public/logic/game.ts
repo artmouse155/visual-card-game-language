@@ -6,13 +6,16 @@ import { Button } from "../visuals/nodes/button.js";
 import { Card } from "../visuals/nodes/card.js";
 
 export class Game {
-  renderer: Renderer;
+  renderer: Renderer | null = null;
 
-  constructor() {
+  constructor() {}
+
+  play() {
+    if (this.renderer) {
+      // this.renderer.queue_free();
+    }
     this.renderer = new Renderer();
   }
-
-  play() {}
 
   win() {
     console.log("YOU WIN!");
@@ -28,17 +31,19 @@ export class Game {
     tupleNodeType: TupleTileDisplayMode = "flush",
     tuple?: Card[]
   ): TupleTile {
-    return this.renderer.addChild(
+    return (this.renderer as Renderer).addChild(
       new TupleTile(new Vector2(x, y), tupleNodeType, tuple)
     );
   }
 
   addLabel(x: number, y: number, text: string): Label {
-    return this.renderer.addChild(new Label(new Vector2(x, y), text));
+    return (this.renderer as Renderer).addChild(
+      new Label(new Vector2(x, y), text)
+    );
   }
 
   addButton(x: number, y: number, text: string, disabled?: boolean): Button {
-    return this.renderer.addChild(
+    return (this.renderer as Renderer).addChild(
       new Button(new Vector2(x, y), text, disabled)
     );
   }
