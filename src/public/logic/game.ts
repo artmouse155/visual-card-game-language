@@ -3,7 +3,7 @@ import { Renderer } from "../visuals/renderer.js";
 import { TupleNode, TupleNodeType } from "../visuals/nodes/tuple_node.js";
 import { Vector2 } from "../visuals/utlis.js";
 import { Button } from "../visuals/nodes/button.js";
-import { Card } from "./card.js";
+import { CardNode } from "../visuals/nodes/card_node.js";
 
 export class Game {
   renderer: Renderer = new Renderer();
@@ -26,7 +26,7 @@ export class Game {
     x: number,
     y: number,
     tupleNodeType: TupleNodeType = "flush",
-    tuple?: Card[]
+    tuple?: CardNode[]
   ): TupleNode {
     return this.renderer.addChild(
       new TupleNode(new Vector2(x, y), tupleNodeType, tuple)

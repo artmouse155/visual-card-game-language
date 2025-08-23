@@ -1,5 +1,20 @@
+import { Vector2 } from "../visuals/utlis.js";
+
 export type Suit = "Spade" | "Heart" | "Diamond" | "Club";
-export type Rank = 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | "J" | "Q" | "K" | "A";
+export type Rank =
+  | "2"
+  | "3"
+  | "4"
+  | "5"
+  | "6"
+  | "7"
+  | "8"
+  | "9"
+  | "10"
+  | "J"
+  | "Q"
+  | "K"
+  | "A";
 
 export type RankOrder = Record<Rank, number>;
 export type OnlyRankOrders = { [key: string]: RankOrder };
@@ -59,3 +74,7 @@ export const SuitEmojis: Record<Suit, string> = {
   Diamond: "♦️",
   Club: "♣️",
 };
+
+export const STAGGER_DISTANCE = new Vector2(10, 10);
+export const TILE_SIZE = new Vector2(90, 130);
+export const CARD_SIZE = new Vector2(80, 120);

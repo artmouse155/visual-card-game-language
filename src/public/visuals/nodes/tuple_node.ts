@@ -1,4 +1,4 @@
-import { Card } from "../../logic/card.js";
+import { STAGGER_DISTANCE } from "../../logic/constants.js";
 import { Vector2 } from "../utlis.js";
 import { CanvasItem, Rect } from "./canvas_item.js";
 import { CardNode } from "./card_node.js";
@@ -19,8 +19,6 @@ export const cardRect: Rect = {
   corner_radius: 5,
 };
 
-const STAGGER_DISTANCE = new Vector2(10, 10);
-
 // const tupleNodeTypeOffsets: Record<TupleNodeType, Vector2> = {
 //   drawpile: new Vector2(0, 0),
 //   hand: new Vector2(40, 0),
@@ -31,7 +29,7 @@ const STAGGER_DISTANCE = new Vector2(10, 10);
 export class TupleNode extends CanvasItem {
   protected tupleNodeType: TupleNodeType = "flush";
 
-  protected getCardNodes(): CardNode[] {
+  public getCards(): CardNode[] {
     let out: CardNode[] = [];
     for (const child of this.get_children()) {
       const cardChild = child as CardNode;
@@ -45,12 +43,12 @@ export class TupleNode extends CanvasItem {
   constructor(
     position: Vector2,
     tupleNodeType?: TupleNodeType,
-    cards?: Card[]
+    cards?: CardNode[]
   ) {
     super(position, cardRect.size);
     if (cards) {
       for (const card of cards) {
-        this.addChild(new CardNode(Vector2.ZERO, card));
+        this.addChild(card);
       }
     }
     if (tupleNodeType) {
@@ -71,12 +69,6 @@ export class TupleNode extends CanvasItem {
     return node;
   }
 
-  getCards(): Card[] {
-    return this.getCardNodes().map((c: CardNode) => {
-      return c.getCard();
-    });
-  }
-
   protected getSize(): number {
     return this.getCards().length;
   }
@@ -94,7 +86,7 @@ export class TupleNode extends CanvasItem {
    */
 
   protected updateCardPositions(): void {
-    const cardNodes = this.getCardNodes();
+    const cardNodes = this.getCards();
     let initialOffset = Vector2.ZERO;
     let cardSpacing = Vector2.ZERO;
     switch (this.tupleNodeType) {
@@ -129,13 +121,13 @@ export class TupleNode extends CanvasItem {
   }
 
   moveCard(
-    conditionFunc: (c: Card, index: number) => boolean,
+    conditionFunc: (c: CardNode, index: number) => boolean,
     destination: TupleNode,
-    indexFunc?: (c: Card, index: number, cards: Card[]) => number,
+    indexFunc?: (c: CardNode, index: number, cards: CardNode[]) => number,
     flipCard?: boolean,
     reverseChildren?: boolean
   ): void {
-    const cardNodes = this.getCardNodes();
+    const cardNodes = this.getCards();
     if (reverseChildren) {
       cardNodes.reverse();
     }
@@ -143,7 +135,7 @@ export class TupleNode extends CanvasItem {
     let found = false;
     for (index = 0; index < cardNodes.length; index++) {
       const cardNode = cardNodes[index];
-      if (conditionFunc(cardNode.getCard(), index)) {
+      if (conditionFunc(cardNode, index)) {
         found = true;
         break;
       }
@@ -154,7 +146,7 @@ export class TupleNode extends CanvasItem {
         this.reparent(
           cardNode,
           destination,
-          indexFunc(cardNode.getCard(), index, destination.getCards())
+          indexFunc(cardNode, index, destination.getCards())
         );
       } else {
         this.reparent(cardNode, destination);
@@ -177,7 +169,7 @@ export class TupleNode extends CanvasItem {
     for (let index = 0; index < count; index++) {
       const thisPileSize = this.getSize();
       this.moveCard(
-        (c: Card, index: number) => {
+        (c: CardNode, index: number) => {
           return index == thisPileSize - 1;
         },
         destination,
@@ -195,7 +187,7 @@ export class TupleNode extends CanvasItem {
     for (let index = 0; index < count; index++) {
       const thisPileSize = this.getSize();
       this.moveCard(
-        (c: Card, index: number) => {
+        (c: CardNode, index: number) => {
           return index == thisPileSize - 1;
         },
         destination,
@@ -211,25 +203,25 @@ export class TupleNode extends CanvasItem {
     };
 
     let temp: TupleNode = new TupleNode(Vector2.ZERO);
-    while (this.getCardNodes().length > 0) {
-      const index = randInRange(0, this.getCardNodes().length);
+    while (this.getCards().length > 0) {
+      const index = randInRange(0, this.getCards().length);
       temp.addChild(this.removeChild(index));
     }
-    while (temp.getCardNodes().length > 0) {
+    while (temp.getCards().length > 0) {
       this.addChild(temp.removeChild(0));
     }
   }
 
   flip(): void {
     this.reverse();
-    for (const cardNode of this.getCardNodes()) {
+    for (const cardNode of this.getCards()) {
       cardNode.flip();
     }
   }
 
   reverse(): void {
-    const cardNodes = this.getCardNodes();
-    for (const cardNode of this.getCardNodes()) {
+    const cardNodes = this.getCards();
+    for (const cardNode of this.getCards()) {
       this.reorderChild(cardNode, 0);
     }
   }

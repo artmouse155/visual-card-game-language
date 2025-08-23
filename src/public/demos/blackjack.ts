@@ -6,9 +6,9 @@ import type {
   RankOrder,
 } from "../logic/constants.js"; // ts extension gone
 import { Orders, SuitOrders } from "../logic/constants.js"; // ts extension gone
-import { Card, SuitCard, Joker } from "../logic/card.js"; // ts extension gone
 import { Deck } from "../logic/deck.js"; // ts extension gone
 import { Game } from "../logic/game.js"; // ts extension gone
+import { CardNode, SuitCardNode } from "../visuals/nodes/card_node.js";
 
 export class Blackjack extends Game {
   /*
@@ -58,18 +58,18 @@ export class Blackjack extends Game {
       drawPile.shuffle();
       drawPile.flip();
 
-      const blackjackCalcScore = (cards: Card[]): number => {
+      const blackjackCalcScore = (cards: CardNode[]): number => {
         let score = 0;
         let aces = 0;
 
         for (const card of cards) {
-          const suitCard = card as SuitCard;
+          const suitCard = card as SuitCardNode;
           if (suitCard) {
-            if (suitCard.rank == ("A" as Rank)) {
+            if (suitCard.getRank() === ("A" as Rank)) {
               score += 1;
               aces++;
             } else {
-              score += suitCard.getValue();
+              score += suitCard.getRankValue();
             }
           }
         }
