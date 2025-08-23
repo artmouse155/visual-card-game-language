@@ -1,5 +1,5 @@
-import type { Suit, Rank, Order } from "./constants.js"; // ts extension gone
-import { SuitEmojis } from "./constants.js"; // ts extension gone
+import type { Suit, Rank, Order } from "./constants.js";
+import { SuitEmojis } from "./constants.js";
 
 export class Card {
   order: Order;
