@@ -1,4 +1,5 @@
 export class VCGLNode {
+  protected parent: VCGLNode | null = null;
   protected children: Array<VCGLNode> = [];
   protected inTree: boolean = false;
   protected readyCalled: boolean = false;
@@ -64,6 +65,7 @@ export class VCGLNode {
 
   protected addChild<Type extends VCGLNode>(node: Type): Type {
     this.children.push(node);
+    node.parent = this;
     if (this.inTree) {
       node._propagate_add_to_tree();
     }
@@ -72,6 +74,10 @@ export class VCGLNode {
 
   protected get_children(): Array<VCGLNode> {
     return this.children;
+  }
+
+  protected get_parent(): VCGLNode | null {
+    return this.parent;
   }
 
   protected reparent(
@@ -133,5 +139,11 @@ export class VCGLNode {
         this
       );
     }
+  }
+
+  protected toString(): string {
+    return `Type: ${this.constructor.name} Parent: ${
+      this.parent
+    } Children: [${this.children.map((child) => child.toString()).join(", ")}]`;
   }
 }

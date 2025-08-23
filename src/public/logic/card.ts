@@ -33,7 +33,7 @@ export class SuitCard extends Card {
   }
 
   toString(): string {
-    return this.faceup ? `${this.rank}${SuitEmojis[this.suit]} ` : "🂠";
+    return this.faceup ? `${this.rank}${SuitEmojis[this.suit]} ` : "";
   }
 
   getValue(): number {
@@ -43,6 +43,6 @@ export class SuitCard extends Card {
 
 export class Joker extends Card {
   toString(): string {
-    return this.faceup ? "🂿" : "🂠";
+    return this.faceup ? "🂿" : "";
   }
 }
