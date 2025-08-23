@@ -5,26 +5,40 @@ import {
   Rank,
   Suit,
   SuitEmojis,
+  CARD_IMAGE_SCALE,
+  SUIT_CARD_TEXTURE_MAP,
 } from "../../logic/constants.js";
 import { Vector2 } from "../utlis.js";
 import { CanvasItem } from "./canvas_item.js";
 import { Label } from "./label.js";
+import { Sprite } from "./sprite.js";
+
+const PLACEHOLDER_CARD_TEXTURE = "visuals/images/cards/placeholder.png";
+const CARD_BACK = "visuals/images/cards/back.png";
 
 export class Card extends CanvasItem {
   faceup = true;
-  label: Label;
+  // label: Label;
+  frontSprite: Sprite;
+  backSprite: Sprite;
 
   constructor() {
     super(Vector2.ZERO, CARD_SIZE);
     this.draggingEnabled = false;
-    this.label = this.addChild(new Label(Vector2.ZERO, "", 25));
+    this.frontSprite = new Sprite(
+      Vector2.ZERO,
+      PLACEHOLDER_CARD_TEXTURE,
+      CARD_IMAGE_SCALE
+    );
+    this.backSprite = new Sprite(Vector2.ZERO, CARD_BACK, CARD_IMAGE_SCALE);
+    this.addChild(this.frontSprite);
+    this.addChild(this.backSprite);
+    // this.label = this.addChild(new Label(Vector2.ZERO, "", 25));
   }
 
   protected _draw(ctx: CanvasRenderingContext2D): void {
-    // for (const child of this.get_children()) {
-    //   (child as Label).text = this.getCardText();
-    // }
-    this.label.visible = this.faceup;
+    this.frontSprite.visible = this.faceup;
+    this.backSprite.visible = !this.faceup;
     ctx.shadowBlur = 10;
     ctx.shadowOffsetY = 5;
     ctx.shadowColor = this.hasGlow ? "#000000ff" : "#ffffff00";
@@ -46,6 +60,10 @@ export class Card extends CanvasItem {
 
   setFaceup(faceup: boolean): void {
     this.faceup = faceup;
+  }
+
+  protected getImagePath(): string {
+    return PLACEHOLDER_CARD_TEXTURE;
   }
 
   // protected _on_mouse_move(
@@ -77,7 +95,12 @@ export class SuitCard extends Card {
     this.order = order;
     this.suit = suit;
     this.rank = rank;
-    this.label.text = this.getCardText();
+    // this.label.text = this.getCardText();
+    this.frontSprite.setImage(this.getImagePath());
+  }
+
+  protected getImagePath(): string {
+    return SUIT_CARD_TEXTURE_MAP[this.suit as Suit][this.rank as Rank];
   }
 
   getCardText(): string {
@@ -114,7 +137,12 @@ export class SuitCard extends Card {
 export class JokerCard extends Card {
   constructor() {
     super();
-    this.label.text = this.getCardText();
+    // this.label.text = this.getCardText();
+    this.frontSprite.setImage(this.getImagePath());
+  }
+
+  protected getImagePath(): string {
+    return "visuals/images/cards/joker.png";
   }
 
   getCardText(): string {

@@ -2,10 +2,10 @@ import { Vector2 } from "../utlis.js";
 import { CanvasItem } from "./canvas_item.js";
 
 export class Sprite extends CanvasItem {
-  image: HTMLImageElement = new Image();
-  scale: Vector2 = Vector2.ONE;
-  loaded = false;
-  centered = false;
+  private image: HTMLImageElement = new Image();
+  public scale: Vector2 = Vector2.ONE;
+  private loaded = true;
+  public centered = false;
 
   constructor(
     position: Vector2,
@@ -20,12 +20,8 @@ export class Sprite extends CanvasItem {
     if (centered) {
       centered = true;
     }
-    this.image.addEventListener("load", () => {
-      this.loaded = true;
-      this.size = new Vector2(this.image.width, this.image.height);
-    });
 
-    this.image.src = imagePath;
+    this.setImage(imagePath);
   }
 
   protected _draw(ctx: CanvasRenderingContext2D): void {
@@ -41,5 +37,15 @@ export class Sprite extends CanvasItem {
         this.size.y * this.scale.y
       );
     }
+  }
+
+  public setImage(imagePath: string) {
+    this.loaded = false;
+    this.image.addEventListener("load", () => {
+      this.loaded = true;
+      this.size = new Vector2(this.image.width, this.image.height);
+    });
+
+    this.image.src = imagePath;
   }
 }
