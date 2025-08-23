@@ -44,10 +44,10 @@ export class Blackjack extends Game {
     startButton.bindClick(() => {
       startButton.hide();
 
-      const drawPile = this.addTupleNode(300, 250, "drawpile", deck.getCards());
+      const drawPile = this.addTupleNode(300, 250, "flush", deck.getCards());
 
-      const dealerHand = this.addTupleNode(300, 125, "hand");
-      const playerHand = this.addTupleNode(300, 425, "hand");
+      const dealerHand = this.addTupleNode(300, 125, "staggered_right");
+      const playerHand = this.addTupleNode(300, 425, "staggered_right");
 
       let dealerScore = 0;
       let playerScore = 0;

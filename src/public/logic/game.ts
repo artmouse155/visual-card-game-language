@@ -25,7 +25,7 @@ export class Game {
   addTupleNode(
     x: number,
     y: number,
-    tupleNodeType: TupleNodeType = "drawpile",
+    tupleNodeType: TupleNodeType = "flush",
     tuple?: Card[]
   ): TupleNode {
     return this.renderer.addChild(

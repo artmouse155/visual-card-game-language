@@ -5,10 +5,11 @@ import { CardNode } from "./card_node.js";
 import { VCGLNode } from "./vgcl_node.js";
 
 export type TupleNodeType =
-  | "drawpile"
-  | "hand"
+  | "flush"
   | "staggered"
-  | "staggered_right";
+  | "staggered_right"
+  | "centered_staggered"
+  | "centered_staggered_right";
 
 export const cardRect: Rect = {
   size: new Vector2(80, 120),
@@ -18,15 +19,17 @@ export const cardRect: Rect = {
   corner_radius: 5,
 };
 
-const tupleNodeTypeOffsets: Record<TupleNodeType, Vector2> = {
-  drawpile: new Vector2(0, 0),
-  hand: new Vector2(40, 0),
-  staggered: new Vector2(0, 10),
-  staggered_right: new Vector2(20, 0),
-};
+const STAGGER_DISTANCE = new Vector2(10, 10);
+
+// const tupleNodeTypeOffsets: Record<TupleNodeType, Vector2> = {
+//   drawpile: new Vector2(0, 0),
+//   hand: new Vector2(40, 0),
+//   staggered: new Vector2(0, 10),
+//   staggered_right: new Vector2(20, 0),
+// };
 
 export class TupleNode extends CanvasItem {
-  protected tupleNodeType: TupleNodeType = "drawpile";
+  protected tupleNodeType: TupleNodeType = "flush";
 
   protected getCardNodes(): CardNode[] {
     let out: CardNode[] = [];
@@ -92,12 +95,36 @@ export class TupleNode extends CanvasItem {
 
   protected updateCardPositions(): void {
     const cardNodes = this.getCardNodes();
-    const cardSpacing = tupleNodeTypeOffsets[this.tupleNodeType];
+    let initialOffset = Vector2.ZERO;
+    let cardSpacing = Vector2.ZERO;
+    switch (this.tupleNodeType) {
+      case "flush":
+        cardSpacing = Vector2.ZERO;
+        break;
+      case "staggered":
+        cardSpacing = new Vector2(0, STAGGER_DISTANCE.y);
+        break;
+      case "staggered_right":
+        cardSpacing = new Vector2(STAGGER_DISTANCE.x, 0);
+        break;
+      case "centered_staggered":
+        cardSpacing = new Vector2(0, STAGGER_DISTANCE.y);
+        initialOffset = new Vector2(
+          0,
+          ((cardNodes.length - 1) * STAGGER_DISTANCE.y) / 2
+        );
+        break;
+      case "centered_staggered_right":
+        cardSpacing = new Vector2(STAGGER_DISTANCE.x, 0);
+        initialOffset = new Vector2(
+          ((cardNodes.length - 1) * STAGGER_DISTANCE.x) / 2,
+          0
+        );
+        break;
+    }
+
     for (let index = 0; index < cardNodes.length; index++) {
-      cardNodes[index].position = new Vector2(
-        index * cardSpacing.x,
-        index * cardSpacing.y
-      );
+      cardNodes[index].position = initialOffset.plus(cardSpacing.times(index));
     }
   }
 

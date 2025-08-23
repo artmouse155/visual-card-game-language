@@ -1,6 +1,6 @@
 export class Vector2 {
-  x: number = 0;
-  y: number = 0;
+  x: number;
+  y: number;
 
   static get ZERO() {
     return new Vector2(0, 0);
@@ -30,6 +30,10 @@ export class Vector2 {
 
   plus(other: Vector2): Vector2 {
     return new Vector2(this.x + other.x, this.y + other.y);
+  }
+
+  times(scalar: number): Vector2 {
+    return new Vector2(this.x * scalar, this.y * scalar);
   }
 
   lessThan(other: Vector2): boolean {
