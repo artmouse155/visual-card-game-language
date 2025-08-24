@@ -10,7 +10,7 @@ import { Sprite } from "./nodes/sprite.js";
 import { VCGLNode } from "./nodes/vgcl_node.js";
 import { Vector2 } from "./utlis.js";
 
-const BG_IMAGE_PATH = "visuals/images/bg.png";
+const BG_IMAGE_PATH = "visuals/images/bg/wood.png";
 
 export class Renderer extends CanvasItem {
   canvas: HTMLCanvasElement;
