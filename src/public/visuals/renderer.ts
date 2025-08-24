@@ -5,6 +5,7 @@ import {
 } from "../logic/constants.js";
 import { CanvasItem } from "./nodes/canvas_item.js";
 import { Grid } from "./nodes/grid.js";
+import { Label } from "./nodes/label.js";
 import { Sprite } from "./nodes/sprite.js";
 import { VCGLNode } from "./nodes/vgcl_node.js";
 import { Vector2 } from "./utlis.js";
@@ -36,9 +37,11 @@ export class Renderer extends CanvasItem {
     }, 1000 / FPS);
 
     this.addChild(new Sprite(Vector2.ZERO, BG_IMAGE_PATH));
+    const mousePosLabel = this.addChild(new Label(Vector2.ZERO, "0, 0"));
 
     this.canvas.addEventListener("mousemove", (e) => {
       const newMousePos = new Vector2(e.offsetX, e.offsetY);
+      mousePosLabel.text = `${newMousePos.x}, ${newMousePos.y}`;
       this._on_mouse_move(
         newMousePos,
         newMousePos.minus(this.oldMousePos),
@@ -58,6 +61,7 @@ export class Renderer extends CanvasItem {
     });
 
     this.canvas.addEventListener("mouseleave", (e) => {
+      mousePosLabel.text = `0, 0`;
       this._on_mouse_up(new Vector2(e.offsetX, e.offsetY));
     });
 

@@ -41,7 +41,6 @@ export class Blackjack extends Game {
       RankOrder: blackjackOrder,
       SuitOrder: SuitOrders.DEFAULT,
     });
-    const titleLabel = this.addLabel(320, 25, "Blackjack");
     const startButton = this.addButton(325, 250, "Start!");
 
     startButton.bindClick(() => {
@@ -50,18 +49,18 @@ export class Blackjack extends Game {
       const drawPile = this.addTupleNode(4, 2, "flush", deck.getCards());
 
       const dealerHand = this.addTupleNode(4, 1, "staggered_right");
-      const playerHand = this.addTupleNode(4, 3, "centered_staggered_right");
+      const playerHand = this.addTupleNode(4, 3, "staggered_right");
 
       let dealerScore = 0;
       let playerScore = 0;
 
-      const dealerScoreLabel = this.addLabel(300, 75, "Dealer Score: 0");
-      const playerScoreLabel = this.addLabel(300, 375, "Player Score: 0");
+      const dealerScoreLabel = this.addLabel(90, 130, "Dealer Score: 0");
+      const playerScoreLabel = this.addLabel(90, 390, "Player Score: 0");
 
       drawPile.shuffle();
       drawPile.flip();
 
-      const blackjackPivotScore = 200;
+      const blackjackPivotScore = 21;
 
       const blackjackCalcScore = (cards: Card[]): number => {
         let score = 0;
@@ -92,14 +91,14 @@ export class Blackjack extends Game {
         endTurnButton.disabled = true;
       };
 
-      const flipButton = this.addButton(25, 400, "Hit", true);
+      const flipButton = this.addButton(360, 520, "Hit", true);
       const printEverythingButton = this.addButton(
         25,
         450,
         "Print Everything",
         true
       );
-      const endTurnButton = this.addButton(25, 500, "End Turn", true);
+      const endTurnButton = this.addButton(360, 560, "End Turn", true);
 
       printEverythingButton.bindClick(() => {
         console.log((this.renderer as Renderer).toString());
@@ -112,7 +111,7 @@ export class Blackjack extends Game {
 
       flipButton.bindClick(() => {
         console.log("Hit button clicked");
-        drawPile.fromBottom(1).move(playerHand, 0, true, true);
+        drawPile.reveal(playerHand);
         playerScore = blackjackCalcScore(playerHand.getCards());
         playerScoreLabel.text = `Player Score: ${playerScore}`;
         if (playerScore >= blackjackPivotScore) {
